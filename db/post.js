@@ -17,6 +17,12 @@ export async function getPosts(db, from = new Date(), by, limit) {
     .toArray();
 }
 
+export async function findPostById(db, postId) {
+  const _post = await db.collection("posts").findOne({ _id: postId });
+  const post = JSON.stringify(_post);
+  return post;
+}
+
 export async function insertPost(
   db,
   { title, description, eligibility, applicants, creatorId }

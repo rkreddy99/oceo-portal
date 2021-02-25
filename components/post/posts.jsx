@@ -9,36 +9,29 @@ import { useCurrentUser } from '@/hooks/index';
 function Post({ post }) {
   const [currentUser, { mutate }] = useCurrentUser();
   const [isUpdating, setIsUpdating] = useState(false);
+  const [msg, setMsg] = useState(null);
 
   async function apply(){
-    // console.log(post._id);
-    // console.log(currentUser);
     const formdata = new FormData();
     formdata.append('postid', post._id);
     formdata.append('applying', true);
     formdata.append('userid', currentUser._id);
-    console.log(formdata);
-    // const body = {
-    //   postid: post._id,
-    //   userid: currentUser._id,
-    //   applying: true
-    // }
     const res = await fetch('/api/user', {
       method: 'PATCH',
       body: formdata,
     });
-    // if (res.status === 200) {
-    //   const userData = await res.json();
-    //   mutate({
-    //     user: {
-    //       ...user,
-    //       ...userData.user,
-    //     },
-    //   });
-    //   setMsg({ message: 'Profile updated' });
-    // } else {
-    //   setMsg({ message: await res.text(), isError: true });
-    // }
+    if (res.status === 200) {
+      const userData = await res.json();
+      mutate({
+        user: {
+          ...user,
+          ...userData.user,
+        },
+      });
+      setMsg({ message: 'Applied' });
+    } else {
+      setMsg({ message: await res.text(), isError: true });
+    }
     setIsUpdating(false);
   }
   const user = useUser(post.creatorId);
@@ -62,28 +55,36 @@ function Post({ post }) {
             margin-top: 0.5rem;
             margin-bottom: -0.5rem;
           }
-          applied {
+          #applied {
             color: green;
+            font-weight: 600;
           }
         `}
       </style>
       <div>
-        {user && (
-          <Link href={`/user/${user._id}`}>
+        <p>
+          <b>Title</b><br/>
+          {post.title}<br/>
+          <br/>
+          <b>Description</b><br/>
+          {post.description}<br/>
+          <br/>
+          <b>Eligibility</b><br/>
+          {post.eligibility}
+          { user?._id != currentUser?._id ? 
+          [
+            <br/>,<br/>,
+          <b>Posted by - </b>,
+          <Link href={`/user/${user?._id}`}>
             <a style={{ display: 'inline-flex', alignItems: 'center' }}>
               {/* <img width="27" height="27" style={{ borderRadius: '50%', objectFit: 'cover', marginRight: '0.3rem' }} src={user.profilePicture || defaultProfilePicture(user._id)} alt={user.name} /> */}
-              <b>{user.name}</b>
+              <b>{user?.name}</b>
             </a>
-          </Link>
-        )}
-        <p>
-          <b>{post.title}</b><br/>
-          {post.description}<br/>
-          {post.eligibility}
+          </Link>] : null}
         </p>
         {/* <small>{new Date(post.createdAt).toLocaleString()}</small> */}
         {currentUser?.student=='y' ?
-        (currentUser?.posts.includes(post?._id) ? <p id="applied">Applied</p> : <button type="button" onClick={apply}>Apply</button>) : null}
+        (currentUser?.posts.includes(post?._id) ? <p id="applied">Applied!</p> : <button type="button" onClick={apply}>Apply</button>) : null}
       </div>
     </>
   );
@@ -147,6 +148,14 @@ export default function Posts({ creatorId }) {
         {isLoadingMore ? '. . .' : 'load more'}
       </button>
       )}
+    </div>
+  );
+}
+
+export const Applications = ({post}) => {
+  return (
+    <div>
+      <Post key={post._id} post={post} />
     </div>
   );
 }

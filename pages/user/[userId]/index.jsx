@@ -6,14 +6,18 @@ import { all } from '@/middlewares/index';
 import { useCurrentUser } from '@/hooks/index';
 import Posts from '@/components/post/posts';
 import { extractUser } from '@/lib/api-helpers';
-import { findUserById } from '@/db/index';
+import { findUserById, findPostById } from '@/db/index';
 import { defaultProfilePicture } from '@/lib/default';
+import { Applications } from '@/components/post/posts';
 
-export default function UserPage({ user }) {
+export default function UserPage({ user, posts }) {
   if (!user) return <Error statusCode={404} />;
   const {
     name, email, bio, profilePicture, _id
   } = user || {};
+  // const posts = posts;
+  const applications = posts.map((post) => JSON.parse(post))
+  console.log(applications)
   const [currentUser] = useCurrentUser();
   const isCurrentUser = currentUser?._id === user._id;
   return (
@@ -73,7 +77,12 @@ export default function UserPage({ user }) {
         {/* </section> */}
       </div>
       <div>
-        {user.student == 'y' ? (<h3>My Applications</h3>) :
+        {user.student == 'y' ? 
+        [
+          <h3>My Applications</h3>,
+          (applications.map(post => <Applications post={post}/>))
+        ]
+         :
         (<><h3>My posts</h3>
         <Posts creatorId={user._id} /></>)}
       </div>
@@ -85,5 +94,14 @@ export async function getServerSideProps(context) {
   await all.run(context.req, context.res);
   const user = extractUser(await findUserById(context.req.db, context.params.userId));
   if (!user) context.res.statusCode = 404;
-  return { props: { user } };
+  const postIds = user?.posts;
+  const posts = new Array(postIds?.length).fill(null);
+  for (let index = 0; index < postIds.length; index++) {
+    const element = postIds[index];
+    posts[index] = await findPostById(context.req.db, element)
+  }
+  // const posts = postIds?.forEach(async (element) => { 
+  //   return await findPostById(context.req.db, element);
+  // });
+  return { props: { user, posts } };
 }
