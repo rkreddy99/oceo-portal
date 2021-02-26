@@ -122,7 +122,7 @@ export default function Layout({ children }) {
         `}
       </style>
       <Head>
-        <title>OCEO Portal, IITGN</title>
+        <title>oCEO Portal, IITGN</title>
         <meta
           key="viewport"
           name="viewport"
