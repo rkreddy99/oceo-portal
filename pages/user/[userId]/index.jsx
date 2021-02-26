@@ -67,13 +67,13 @@ export default function UserPage({ user, posts }) {
             </Link>
             )}
             <br/>
-            <br/>
-          Bio
-          <p>{bio}</p>
-          {/* Email */}
-          {/* <p>
+          {/* Bio
+          <p>{bio}</p> */}
+          {/* Email
+          <p>
             {email}
-          </p> */}
+          </p>
+            <br/> */}
         {/* </section> */}
       </div>
       <div>
@@ -100,8 +100,5 @@ export async function getServerSideProps(context) {
     const element = postIds[index];
     posts[index] = await findPostById(context.req.db, element)
   }
-  // const posts = postIds?.forEach(async (element) => { 
-  //   return await findPostById(context.req.db, element);
-  // });
   return { props: { user, posts } };
 }

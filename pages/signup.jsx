@@ -18,7 +18,7 @@ const SignupPage = () => {
       name: e.currentTarget.name.value,
       password: e.currentTarget.password.value,
       student: e.currentTarget.student.value,
-      posts:[]
+      posts: []
     };
     const res = await fetch('/api/users', {
       method: 'POST',
@@ -30,6 +30,7 @@ const SignupPage = () => {
       mutate(userObj);
     } else {
       setErrorMsg(await res.text());
+      console.log(errorMsg);
     }
   };
 

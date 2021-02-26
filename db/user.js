@@ -47,7 +47,7 @@ export async function updateUserPosts(db, userid, postid) {
 
 export async function insertUser(
   db,
-  { email, password, bio = "", name, profilePicture, student }
+  { email, password, bio = "", name, profilePicture, student, posts }
 ) {
   console.log("trying to insert user", email);
   return db
@@ -61,6 +61,7 @@ export async function insertUser(
       name,
       bio,
       student,
+      posts,
     })
     .then(({ ops }) => ops[0]);
 }
