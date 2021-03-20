@@ -17,7 +17,7 @@ const SignupPage = () => {
       email: e.currentTarget.email.value,
       name: e.currentTarget.name.value,
       password: e.currentTarget.password.value,
-      student: e.currentTarget.student.value,
+      role: e.currentTarget.role.value,
       posts: []
     };
     const res = await fetch('/api/users', {
@@ -67,12 +67,12 @@ const SignupPage = () => {
               placeholder="Create a password"
             />
           </label>
-          <label htmlFor="student">
+          <label htmlFor="role">
             <input
-              id="student"
-              name="student"
-              type="student"
-              placeholder="Are you a student? y or n (case sensitive)"
+              id="role"
+              name="role"
+              type="role"
+              placeholder="Role (student/professor/admin)"
             />
           </label>
           <button type="submit">Sign up</button>

@@ -77,13 +77,13 @@ export default function UserPage({ user, posts }) {
         {/* </section> */}
       </div>
       <div>
-        {user.student == 'y' ? 
+        {user.role == 'student' ? 
         [
           <h3>My Applications</h3>,
           (applications.map(post => <Applications post={post}/>))
         ]
          :
-        (<><h3>My posts</h3>
+        (<><h3>Posts</h3>
         <Posts creatorId={user._id} /></>)}
       </div>
     </>
@@ -92,6 +92,7 @@ export default function UserPage({ user, posts }) {
 
 export async function getServerSideProps(context) {
   await all.run(context.req, context.res);
+  console.log(context.params)
   const user = extractUser(await findUserById(context.req.db, context.params.userId));
   if (!user) context.res.statusCode = 404;
   const postIds = user?.posts;
