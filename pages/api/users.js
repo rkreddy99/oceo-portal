@@ -11,7 +11,7 @@ const handler = nc();
 handler.use(all);
 
 handler.post(async (req, res) => {
-  const { name, password, student, posts } = req.body;
+  const { name, password, role, posts } = req.body;
   console.log(req.body);
   const email = normalizeEmail(req.body.email);
   if (!isEmail(email)) {
@@ -32,7 +32,7 @@ handler.post(async (req, res) => {
     password: hashedPassword,
     bio: "",
     name,
-    student,
+    role,
     posts,
   });
   req.logIn(user, (err) => {

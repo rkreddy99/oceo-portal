@@ -83,7 +83,7 @@ function Post({ post }) {
           </Link>] : null}
         </p>
         {/* <small>{new Date(post.createdAt).toLocaleString()}</small> */}
-        {currentUser?.student=='y' ?
+        {currentUser?.role=='student' ?
         (currentUser?.posts.includes(post?._id) ? <p id="applied">Applied!</p> : <button type="button" onClick={apply}>Apply</button>) : null}
       </div>
     </>
