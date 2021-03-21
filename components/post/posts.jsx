@@ -36,24 +36,27 @@ function Post({ post }) {
   }
 
   async function approve(bool){
-    const body = {
+    const body = JSON.stringify({
       postId: post._id,
       approve: bool === true
-    }
+    })
     if (bool) {
-      const res = await fetch('api/posts', { 
+      var res = await fetch('api/posts', { 
         method: 'PATCH',
-        body: JSON.stringify(body),
+        body: body,
       });
-      if (res.status === 200) {
-        setMsg({message: "Approved"});
-      } else {
-        setMsg({ message: await res.text(), isError: true });
-      }
-      setIsUpdating(false);
-    } else {
-
+    } else if (!bool){
+      var res = await fetch('api/posts', {
+        method: 'DELETE',
+        body: body
+      })
     }
+    if (res.status === 200) {
+      setMsg({message: "Approved"});
+    } else {
+      setMsg({ message: await res.text(), isError: true });
+    }
+    setIsUpdating(false);
   }
 
   const user = useUser(post.creatorId);
@@ -111,7 +114,7 @@ function Post({ post }) {
         (
           <>
             <button type="button" onClick={() => approve(true)}>Approve</button>
-            <button type="button" onClick={() => approve(false)}>Disapprove</button>
+            <button type="button" onClick={() => approve(false)}>Delete</button>
           </>
         ) : null}
       </div>
