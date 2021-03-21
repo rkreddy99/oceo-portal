@@ -59,7 +59,7 @@ function Post({ post }) {
     setIsUpdating(false);
   }
 
-  const user = useUser(post.creatorId);
+  const user = useUser(post?.creatorId);
   return (
     <>
       <style jsx>
@@ -89,13 +89,13 @@ function Post({ post }) {
       <div>
         <p>
           <b>Title</b><br/>
-          {post.title}<br/>
+          {post?.title}<br/>
           <br/>
           <b>Description</b><br/>
-          {post.description}<br/>
+          {post?.description}<br/>
           <br/>
           <b>Eligibility</b><br/>
-          {post.eligibility}
+          {post?.eligibility}
           { user?._id != currentUser?._id ? 
           [
             <br/>,<br/>,
@@ -131,7 +131,7 @@ export function usePostPages({ creatorId, approved } = {}) {
 
     // first page, previousPageData is null
     if (index === 0) {
-      return `/api/posts?limit=${PAGE_SIZE}&approved=${approved}${
+      return `/api/posts?limit=${PAGE_SIZE}&approved=${approved===true}${
         creatorId ? `&by=${creatorId}` : ''
       }`;
     }
@@ -145,7 +145,7 @@ export function usePostPages({ creatorId, approved } = {}) {
       ).getTime() - 1,
     ).toJSON();
 
-    return `/api/posts?from=${from}&limit=${PAGE_SIZE}${
+    return `/api/posts?from=${from}&limit=${PAGE_SIZE}&approved=${approved===true}${
       creatorId ? `&by=${creatorId}` : ''
     }`;
   }, fetcher, {
@@ -185,9 +185,12 @@ export default function Posts({ creatorId, approved }) {
 }
 
 export const Applications = ({post}) => {
-  return (
+  if (post!=null)
+  {return (
     <div>
-      <Post key={post._id} post={post} />
+      <Post key={post?._id} post={post} />
     </div>
-  );
+  );} else {
+    return null
+  }
 }

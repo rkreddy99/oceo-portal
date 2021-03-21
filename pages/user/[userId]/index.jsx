@@ -76,14 +76,14 @@ export default function UserPage({ user, posts }) {
         {/* </section> */}
       </div>
       <div>
-        {user.role == 'student' ? 
+        {user?.role == 'student' ? 
         [
           <h3>My Applications</h3>,
           (applications.map(post => <Applications post={post}/>))
         ]
          :
         (<><h3>Posts</h3>
-        <Posts creatorId={user._id} /></>)}
+        <Posts creatorId={user?._id} /></>)}
       </div>
     </>
   );
