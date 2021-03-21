@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid";
 
-export async function getPosts(db, from = new Date(), by, limit) {
+export async function getPosts(db, from = new Date(), by, limit, approved) {
   return db
     .collection("posts")
     .find({
@@ -11,6 +11,7 @@ export async function getPosts(db, from = new Date(), by, limit) {
         },
       }),
       ...(by && { creatorId: by }),
+      ...{ approved: approved === true },
     })
     .sort({ createdAt: -1 })
     .limit(limit || 10)
@@ -25,7 +26,7 @@ export async function findPostById(db, postId) {
 
 export async function insertPost(
   db,
-  { title, description, eligibility, applicants, creatorId }
+  { title, description, eligibility, approved, applicants, creatorId }
 ) {
   return db
     .collection("posts")
@@ -34,9 +35,20 @@ export async function insertPost(
       title,
       description,
       eligibility,
+      approved,
       applicants,
       creatorId,
       createdAt: new Date(),
     })
     .then(({ ops }) => ops[0]);
+}
+
+export async function approvePost(db, { postId, approve }) {
+  return db
+    .collection("posts")
+    .findOneAndUpdate(
+      { _id: postId },
+      { $set: { approved: approve === true } },
+      { upsert: false }
+    );
 }

@@ -25,7 +25,6 @@ const ProfileSection = () => {
     if (resumeRef.current.files[0]) { formData.append('resume', resumeRef.current.files[0]); }
     formData.append('name', nameRef.current.value);
     formData.append('bio', bioRef.current.value);
-    console.log(formData);
     const res = await fetch('/api/user', {
       method: 'PATCH',
       body: formData,

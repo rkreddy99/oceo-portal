@@ -34,6 +34,28 @@ function Post({ post }) {
     }
     setIsUpdating(false);
   }
+
+  async function approve(bool){
+    const body = {
+      postId: post._id,
+      approve: bool === true
+    }
+    if (bool) {
+      const res = await fetch('api/posts', { 
+        method: 'PATCH',
+        body: JSON.stringify(body),
+      });
+      if (res.status === 200) {
+        setMsg({message: "Approved"});
+      } else {
+        setMsg({ message: await res.text(), isError: true });
+      }
+      setIsUpdating(false);
+    } else {
+
+    }
+  }
+
   const user = useUser(post.creatorId);
   return (
     <>
@@ -85,6 +107,13 @@ function Post({ post }) {
         {/* <small>{new Date(post.createdAt).toLocaleString()}</small> */}
         {currentUser?.role=='student' ?
         (currentUser?.posts.includes(post?._id) ? <p id="applied">Applied!</p> : <button type="button" onClick={apply}>Apply</button>) : null}
+        {currentUser?.role=='admin' ? 
+        (
+          <>
+            <button type="button" onClick={() => approve(true)}>Approve</button>
+            <button type="button" onClick={() => approve(false)}>Disapprove</button>
+          </>
+        ) : null}
       </div>
     </>
   );
@@ -92,14 +121,14 @@ function Post({ post }) {
 
 const PAGE_SIZE = 10;
 
-export function usePostPages({ creatorId } = {}) {
+export function usePostPages({ creatorId, approved } = {}) {
   return useSWRInfinite((index, previousPageData) => {
     // reached the end
     if (previousPageData && previousPageData.posts.length === 0) return null;
 
     // first page, previousPageData is null
     if (index === 0) {
-      return `/api/posts?limit=${PAGE_SIZE}${
+      return `/api/posts?limit=${PAGE_SIZE}&approved=${approved}${
         creatorId ? `&by=${creatorId}` : ''
       }`;
     }
@@ -121,10 +150,10 @@ export function usePostPages({ creatorId } = {}) {
   });
 }
 
-export default function Posts({ creatorId }) {
+export default function Posts({ creatorId, approved }) {
   const {
     data, error, size, setSize,
-  } = usePostPages({ creatorId });
+  } = usePostPages({ creatorId, approved });
 
   const posts = data ? data.reduce((acc, val) => [...acc, ...val.posts], []) : [];
   const isLoadingInitialData = !data && !error;

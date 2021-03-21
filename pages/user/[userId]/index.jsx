@@ -17,7 +17,6 @@ export default function UserPage({ user, posts }) {
   } = user || {};
   // const posts = posts;
   const applications = posts.map((post) => JSON.parse(post))
-  console.log(applications)
   const [currentUser] = useCurrentUser();
   const isCurrentUser = currentUser?._id === user._id;
   return (
@@ -92,7 +91,6 @@ export default function UserPage({ user, posts }) {
 
 export async function getServerSideProps(context) {
   await all.run(context.req, context.res);
-  console.log(context.params)
   const user = extractUser(await findUserById(context.req.db, context.params.userId));
   if (!user) context.res.statusCode = 404;
   const postIds = user?.posts;

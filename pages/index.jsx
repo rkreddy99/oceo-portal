@@ -10,28 +10,26 @@ const IndexPage = () => {
   const route = useRouter();
   useEffect(() => {
     if(user?.role == 'student'){
-      console.log('student');console.log(user);
       async function routing(){
-        // await route.replace(`/404`)
-        await route.replace(`/student/${user._id}`)
+        await route.replace(`/student/${user?._id}`)
       }
       routing();
     }
     else if(user?.role == 'professor'){
       async function routing(){
-        await route.replace(`/professor/${user._id}`)
+        await route.replace(`/professor/${user?._id}`)
       }
       routing();
     }
     else if(user?.role == 'admin'){
       async function routing(){
-        await route.replace(`/admin/${user._id}`)
+        await route.replace(`/admin/${user?._id}`)
       }
       routing();
     }
     else{
       async function routing(){
-        await route.replace(`/admin/${user._id}`)
+        await route.replace(`/admin`)
       }
       routing();
     }
