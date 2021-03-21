@@ -175,30 +175,6 @@ export default function Layout({ children }) {
       </header>
 
       <main>{children}</main>
-      {/* <footer>
-        <p>
-          Made with
-          {' '}
-          <span role="img" aria-label="Love">
-            ❤️
-          </span>
-          ,
-          {' '}
-          <span role="img" aria-label="Fire">
-            🔥
-          </span>
-          , and a keyboard by
-          {' '}
-          <a href="https://hoangvvo.com/">Hoang Vo</a>
-          .
-        </p>
-        <p>
-          Source code is on
-          {' '}
-          <a href="https://github.com/hoangvvo/nextjs-mongodb-app">Github</a>
-          .
-        </p>
-      </footer> */}
     </>
   );
 };
