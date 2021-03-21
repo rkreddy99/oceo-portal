@@ -14,7 +14,7 @@ handler.get(async (req, res) => {
     req.query.from ? new Date(req.query.from) : undefined,
     req.query.by,
     req.query.limit ? parseInt(req.query.limit, 10) : undefined,
-    req.query.approved
+    req.query.approved === "true"
   );
 
   if (req.query.from && posts.length > 0) {
