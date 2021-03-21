@@ -23,7 +23,7 @@ const IndexPage = () => {
     }
     else if(user?.role == 'admin'){
       async function routing(){
-        await route.replace(`/admin/${user?._id}`)
+        await route.replace(`/admin`)
       }
       routing();
     }

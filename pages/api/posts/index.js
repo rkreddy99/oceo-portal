@@ -1,6 +1,6 @@
 import nc from "next-connect";
 import { all } from "@/middlewares/index";
-import { getPosts, insertPost, approvePost } from "@/db/index";
+import { getPosts, insertPost, approvePost, deletePost } from "@/db/index";
 
 const handler = nc();
 
@@ -52,6 +52,17 @@ handler.patch(async (req, res) => {
   let body = JSON.parse(req.body);
   if (body.approve === true) {
     await approvePost(req.db, body);
+  }
+});
+
+handler.delete(async (req, res) => {
+  if (!req.user) {
+    req.status(401).end();
+    return;
+  }
+  let body = JSON.parse(req.body);
+  if (body.approve === false) {
+    await deletePost(req.db, body);
   }
 });
 

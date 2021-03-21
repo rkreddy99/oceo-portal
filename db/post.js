@@ -52,3 +52,7 @@ export async function approvePost(db, { postId, approve }) {
       { upsert: false }
     );
 }
+
+export async function deletePost(db, { postId, approve }) {
+  if (!approve) return db.collection("posts").deleteOne({ _id: postId });
+}
