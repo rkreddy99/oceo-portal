@@ -146,7 +146,7 @@ export default function Layout({ children }) {
         <nav>
           <Link href="/">
             <a>
-              <h1>OCEO Portal, IITGN</h1>
+              <h1>o-CEO Portal, IITGN</h1>
             </a>
           </Link>
           <div>
