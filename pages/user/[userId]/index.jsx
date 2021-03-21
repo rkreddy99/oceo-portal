@@ -17,7 +17,6 @@ export default function UserPage({ user, posts }) {
   } = user || {};
   // const posts = posts;
   const applications = posts.map((post) => JSON.parse(post))
-  console.log(applications)
   const [currentUser] = useCurrentUser();
   const isCurrentUser = currentUser?._id === user._id;
   return (
@@ -77,13 +76,13 @@ export default function UserPage({ user, posts }) {
         {/* </section> */}
       </div>
       <div>
-        {user.student == 'y' ? 
+        {user.role == 'student' ? 
         [
           <h3>My Applications</h3>,
           (applications.map(post => <Applications post={post}/>))
         ]
          :
-        (<><h3>My posts</h3>
+        (<><h3>Posts</h3>
         <Posts creatorId={user._id} /></>)}
       </div>
     </>
