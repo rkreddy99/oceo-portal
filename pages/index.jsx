@@ -9,13 +9,7 @@ const IndexPage = () => {
   const [user] = useCurrentUser();
   const route = useRouter();
   useEffect(() => {
-    if(user?.role == 'student'){
-      async function routing(){
-        await route.replace(`/home`)
-      }
-      routing();
-    }
-    else if(user?.role == 'professor'){
+    if(user?.role == 'student' || user?.role == 'professor'){
       async function routing(){
         await route.replace(`/home`)
       }

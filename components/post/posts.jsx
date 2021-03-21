@@ -113,8 +113,8 @@ function Post({ post }) {
         {currentUser?.role=='admin' ? 
         (
           <>
-            <button type="button" onClick={() => approve(true)}>Approve</button>
-            <button type="button" onClick={() => approve(false)}>Delete</button>
+            <button type="button" onClick={() => approve(true, post)}>Approve</button>
+            <button type="button" onClick={() => approve(false, post)}>Delete</button>
           </>
         ) : null}
       </div>
@@ -131,7 +131,7 @@ export function usePostPages({ creatorId, approved } = {}) {
 
     // first page, previousPageData is null
     if (index === 0) {
-      return `/api/posts?limit=${PAGE_SIZE}&approved=${approved===true}${
+      return `/api/posts?limit=${PAGE_SIZE}&approved=${approved}${
         creatorId ? `&by=${creatorId}` : ''
       }`;
     }
@@ -145,7 +145,7 @@ export function usePostPages({ creatorId, approved } = {}) {
       ).getTime() - 1,
     ).toJSON();
 
-    return `/api/posts?from=${from}&limit=${PAGE_SIZE}&approved=${approved===true}${
+    return `/api/posts?from=${from}&limit=${PAGE_SIZE}&approved=${approved}${
       creatorId ? `&by=${creatorId}` : ''
     }`;
   }, fetcher, {
@@ -159,6 +159,7 @@ export default function Posts({ creatorId, approved }) {
   } = usePostPages({ creatorId, approved });
 
   const posts = data ? data.reduce((acc, val) => [...acc, ...val.posts], []) : [];
+  const [postss, setPost] = useState(posts);
   const isLoadingInitialData = !data && !error;
   const isLoadingMore = isLoadingInitialData || (data && typeof data[size - 1] === 'undefined');
   const isEmpty = data?.[0].posts?.length === 0;

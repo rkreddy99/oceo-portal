@@ -11,7 +11,7 @@ const IndexPage = () => {
   return (
     <>
       <div>
-        <h3>All available opportunities
+        <h3>Opportunities requiring approval.
         </h3>
         <Posts approved={false}/>
       </div>
