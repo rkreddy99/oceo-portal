@@ -11,13 +11,13 @@ const IndexPage = () => {
   useEffect(() => {
     if(user?.role == 'student'){
       async function routing(){
-        await route.replace(`/student/${user?._id}`)
+        await route.replace(`/home`)
       }
       routing();
     }
     else if(user?.role == 'professor'){
       async function routing(){
-        await route.replace(`/professor/${user?._id}`)
+        await route.replace(`/home`)
       }
       routing();
     }
@@ -29,7 +29,7 @@ const IndexPage = () => {
     }
     else{
       async function routing(){
-        await route.replace(`/admin`)
+        await route.replace(`/home`)
       }
       routing();
     }
