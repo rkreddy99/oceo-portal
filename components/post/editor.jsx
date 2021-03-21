@@ -20,6 +20,7 @@ export default function PostEditor() {
       title: e.currentTarget.title.value,
       description: e.currentTarget.description.value,
       eligibility: e.currentTarget.eligibility.value,
+      approved: false
     };
     // console.log(JSON.stringify(body))
     // if (!e.currentTarget.content.value) return;

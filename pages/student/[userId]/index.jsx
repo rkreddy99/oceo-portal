@@ -12,7 +12,7 @@ const IndexPage = () => {
       <div>
         <h3>All available opportunities
         </h3>
-        <Posts />
+        <Posts approved={true}/>
       </div>
     </>
   );

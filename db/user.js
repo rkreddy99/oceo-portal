@@ -49,7 +49,6 @@ export async function insertUser(
   db,
   { email, password, bio = "", name, profilePicture, role, posts }
 ) {
-  console.log("trying to insert user", email);
   return db
     .collection("users")
     .insertOne({

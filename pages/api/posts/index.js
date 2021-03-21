@@ -1,6 +1,6 @@
 import nc from "next-connect";
 import { all } from "@/middlewares/index";
-import { getPosts, insertPost } from "@/db/index";
+import { getPosts, insertPost, approvePost } from "@/db/index";
 
 const handler = nc();
 
@@ -13,7 +13,8 @@ handler.get(async (req, res) => {
     req.db,
     req.query.from ? new Date(req.query.from) : undefined,
     req.query.by,
-    req.query.limit ? parseInt(req.query.limit, 10) : undefined
+    req.query.limit ? parseInt(req.query.limit, 10) : undefined,
+    req.query.approved
   );
 
   if (req.query.from && posts.length > 0) {
@@ -35,11 +36,23 @@ handler.post(async (req, res) => {
     title: req.body.title,
     description: req.body.description,
     eligibility: req.body.eligibility,
+    approved: req.body.approved,
     applicants: [],
     creatorId: req.user._id,
   });
 
   return res.json({ post });
+});
+
+handler.patch(async (req, res) => {
+  if (!req.user) {
+    req.status(401).end();
+    return;
+  }
+  let body = JSON.parse(req.body);
+  if (body.approve === true) {
+    await approvePost(req.db, body);
+  }
 });
 
 export default handler;
