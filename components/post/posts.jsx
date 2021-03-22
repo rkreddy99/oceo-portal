@@ -11,6 +11,8 @@ function Post({ post }) {
   const [isUpdating, setIsUpdating] = useState(false);
   const [msg, setMsg] = useState(null);
 
+  var [hide, setHide] = useState(false);
+
   async function apply(){
     const formdata = new FormData();
     formdata.append('postid', post._id);
@@ -53,6 +55,7 @@ function Post({ post }) {
     }
     if (res.status === 200) {
       setMsg({message: "Approved"});
+      setHide(true);
     } else {
       setMsg({ message: await res.text(), isError: true });
     }
@@ -60,6 +63,8 @@ function Post({ post }) {
   }
 
   const user = useUser(post?.creatorId);
+  const deadline = (new Date(post?.deadline)).toDateString()
+  if (!hide) {
   return (
     <>
       <style jsx>
@@ -95,7 +100,10 @@ function Post({ post }) {
           {post?.description}<br/>
           <br/>
           <b>Eligibility</b><br/>
-          {post?.eligibility}
+          {post?.eligibility}<br/>
+          <br/>
+          <b>Deadline</b><br/>
+          {deadline}
           { user?._id != currentUser?._id ? 
           [
             <br/>,<br/>,
@@ -119,7 +127,7 @@ function Post({ post }) {
         ) : null}
       </div>
     </>
-  );
+  );} else if(hide) return null;
 }
 
 const PAGE_SIZE = 10;
@@ -159,7 +167,6 @@ export default function Posts({ creatorId, approved }) {
   } = usePostPages({ creatorId, approved });
 
   const posts = data ? data.reduce((acc, val) => [...acc, ...val.posts], []) : [];
-  const [postss, setPost] = useState(posts);
   const isLoadingInitialData = !data && !error;
   const isLoadingMore = isLoadingInitialData || (data && typeof data[size - 1] === 'undefined');
   const isEmpty = data?.[0].posts?.length === 0;

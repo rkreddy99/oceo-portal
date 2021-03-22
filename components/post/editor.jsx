@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
 import { useCurrentUser } from '@/hooks/index';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { registerLocale, setDefaultLocale } from  "react-datepicker";
+import enIN from 'date-fns/locale/en-IN'
+registerLocale('enIN', enIN);
 
 export default function PostEditor() {
   const [user] = useCurrentUser();
+
+  const [deadline, setdeadline] = useState(null);
 
   const [msg, setMsg] = useState(null);
 
@@ -16,11 +23,13 @@ export default function PostEditor() {
 
   async function hanldeSubmit(e) {
     e.preventDefault();
+    setdeadline(null)    
     const body = {
       title: e.currentTarget.title.value,
       description: e.currentTarget.description.value,
       eligibility: e.currentTarget.eligibility.value,
-      approved: false
+      approved: false,
+      deadline: deadline
     };
     // console.log(JSON.stringify(body))
     // if (!e.currentTarget.content.value) return;
@@ -70,6 +79,9 @@ export default function PostEditor() {
             type="text"
             placeholder="Eligibility"
           />
+        </label>
+        <label htmlFor="deadline">
+          <DatePicker selected={deadline} onChange={date => setdeadline(date)} minDate={new Date()} locale="enIN" placeholderText="Date of deadline"/>
         </label>
         <button type="submit" style={{ marginLeft: '0.5rem' }}>Post</button>
         <button type="reset" style={{ marginLeft: '0.5rem' }}>Discard</button>
