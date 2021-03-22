@@ -1,1 +1,1 @@
-o-CEO-Portal for IITGN
+o-CEO Portal for IITGN
