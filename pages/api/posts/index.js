@@ -39,6 +39,7 @@ handler.post(async (req, res) => {
     approved: req.body.approved,
     applicants: [],
     creatorId: req.user._id,
+    deadline: req.body.deadline,
   });
 
   return res.json({ post });
@@ -47,11 +48,11 @@ handler.post(async (req, res) => {
 handler.patch(async (req, res) => {
   if (!req.user) {
     req.status(401).end();
-    return;
   }
   let body = JSON.parse(req.body);
   if (body.approve === true) {
-    await approvePost(req.db, body);
+    const r = await approvePost(req.db, body);
+    return res.json({ r });
   }
 });
 
@@ -62,7 +63,8 @@ handler.delete(async (req, res) => {
   }
   let body = JSON.parse(req.body);
   if (body.approve === false) {
-    await deletePost(req.db, body);
+    const r = await deletePost(req.db, body);
+    return res.json({ r });
   }
 });
 

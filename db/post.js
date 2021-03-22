@@ -26,7 +26,7 @@ export async function findPostById(db, postId) {
 
 export async function insertPost(
   db,
-  { title, description, eligibility, approved, applicants, creatorId }
+  { title, description, eligibility, approved, applicants, creatorId, deadline }
 ) {
   return db
     .collection("posts")
@@ -38,21 +38,25 @@ export async function insertPost(
       approved,
       applicants,
       creatorId,
+      deadline: new Date(deadline),
       createdAt: new Date(),
     })
     .then(({ ops }) => ops[0]);
 }
 
 export async function approvePost(db, { postId, approve }) {
-  return db
+  const { value } = await db
     .collection("posts")
     .findOneAndUpdate(
       { _id: postId },
-      { $set: { approved: approve === true } },
-      { upsert: false }
+      { $set: { approved: approve === true } }
     );
+  return value;
 }
 
 export async function deletePost(db, { postId, approve }) {
-  if (!approve) return db.collection("posts").deleteOne({ _id: postId });
+  if (!approve) {
+    const { result } = await db.collection("posts").deleteOne({ _id: postId });
+    return result;
+  }
 }
