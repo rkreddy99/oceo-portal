@@ -1,6 +1,13 @@
 import { nanoid } from "nanoid";
 
-export async function getPosts(db, from = new Date(), by, limit, approved) {
+export async function getPosts(
+  db,
+  from = new Date(),
+  by,
+  limit,
+  approved,
+  deadlineDate
+) {
   return db
     .collection("posts")
     .find({
@@ -12,6 +19,7 @@ export async function getPosts(db, from = new Date(), by, limit, approved) {
       }),
       ...(by && { creatorId: by }),
       ...{ approved: approved === true },
+      ...(deadlineDate && { deadline: { $gte: deadlineDate } }),
     })
     .sort({ createdAt: -1 })
     .limit(limit || 10)

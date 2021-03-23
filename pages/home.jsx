@@ -23,13 +23,13 @@ const Home = () => {
             <div>
                 <h3>All available opportunities
                 </h3>
-                <Posts approved={true}/>
+                <Posts approved={true} deadlineDate={new Date()}/>
             </div>
         </>
     );
   } else {
       return (<>
-      <h3> Please sign in to apply or create an opportunity</h3><Posts approved={true}/></>)
+      <h3> Please sign in to apply or create an opportunity</h3><Posts approved={true} deadlineDate={new Date()} /></>)
   }
 };
 
