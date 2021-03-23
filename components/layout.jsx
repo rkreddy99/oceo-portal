@@ -1,15 +1,18 @@
 import React from 'react';
 import Head from 'next/head';
+import {useRouter} from "next/router";
 import Link from 'next/link';
 import { useCurrentUser } from '@/hooks/index';
 
 export default function Layout({ children }) {
   const [user, { mutate }] = useCurrentUser();
+  const route = useRouter();
   const handleLogout = async () => {
     await fetch('/api/auth', {
       method: 'DELETE',
     });
     mutate(null);
+    await route.replace('/');
   };
   return (
     <>
