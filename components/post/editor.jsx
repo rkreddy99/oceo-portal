@@ -81,7 +81,12 @@ export default function PostEditor() {
           />
         </label>
         <label htmlFor="deadline">
-          <DatePicker selected={deadline} onChange={date => setdeadline(date)} minDate={new Date()} locale="enIN" placeholderText="Date of deadline"/>
+          <DatePicker 
+          selected={deadline} 
+          onChange={date => setdeadline(date)} 
+          minDate={new Date()} 
+          locale="enIN" 
+          placeholderText="Date of deadline"/>
         </label>
         <button type="submit" style={{ marginLeft: '0.5rem' }}>Post</button>
         <button type="reset" style={{ marginLeft: '0.5rem' }}>Discard</button>

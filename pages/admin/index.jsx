@@ -13,7 +13,7 @@ const IndexPage = () => {
       <div>
         <h3>Opportunities requiring approval.
         </h3>
-        <Posts approved={false}/>
+        <Posts approved={false} deadlineDate={new Date()} />
       </div>
     </>
   );

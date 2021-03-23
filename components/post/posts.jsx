@@ -132,7 +132,7 @@ function Post({ post }) {
 
 const PAGE_SIZE = 10;
 
-export function usePostPages({ creatorId, approved } = {}) {
+export function usePostPages({ creatorId, approved, deadlineDate } = {}) {
   return useSWRInfinite((index, previousPageData) => {
     // reached the end
     if (previousPageData && previousPageData.posts.length === 0) return null;
@@ -141,7 +141,7 @@ export function usePostPages({ creatorId, approved } = {}) {
     if (index === 0) {
       return `/api/posts?limit=${PAGE_SIZE}&approved=${approved}${
         creatorId ? `&by=${creatorId}` : ''
-      }`;
+      }${deadlineDate ? `&deadlineDate=${deadlineDate}` : ''}`;
     }
 
     // using oldest posts createdAt date as cursor
@@ -155,16 +155,16 @@ export function usePostPages({ creatorId, approved } = {}) {
 
     return `/api/posts?from=${from}&limit=${PAGE_SIZE}&approved=${approved}${
       creatorId ? `&by=${creatorId}` : ''
-    }`;
+    }${deadlineDate ? `&deadlineDate=${new Date()}` : ''}`;
   }, fetcher, {
     refreshInterval: 10000, // Refresh every 10 seconds
   });
 }
 
-export default function Posts({ creatorId, approved }) {
+export default function Posts({ creatorId, approved, deadlineDate }) {
   const {
     data, error, size, setSize,
-  } = usePostPages({ creatorId, approved });
+  } = usePostPages({ creatorId, approved, deadlineDate });
 
   const posts = data ? data.reduce((acc, val) => [...acc, ...val.posts], []) : [];
   const isLoadingInitialData = !data && !error;

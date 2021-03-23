@@ -9,12 +9,14 @@ handler.use(all);
 const maxAge = 1 * 24 * 60 * 60;
 
 handler.get(async (req, res) => {
+  const deadlineDate = new Date(req.query.deadlineDate);
   const posts = await getPosts(
     req.db,
     req.query.from ? new Date(req.query.from) : undefined,
     req.query.by,
     req.query.limit ? parseInt(req.query.limit, 10) : undefined,
-    req.query.approved === "true"
+    req.query.approved === "true",
+    deadlineDate
   );
 
   if (req.query.from && posts.length > 0) {
