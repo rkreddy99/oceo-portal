@@ -1,32 +1,41 @@
-import bcrypt from 'bcryptjs';
-import nc from 'next-connect';
-import { sendMail } from '@/lib/mail';
-import { database } from '@/middlewares/index';
+import bcrypt from "bcryptjs";
+import nc from "next-connect";
+import { sendEmail } from "@/lib/mail";
+import { database } from "@/middlewares/index";
 import {
-  findUserByEmail, updateUserById, findAndDeleteTokenByIdAndType, insertToken,
-} from '@/db/index';
+  findUserByEmail,
+  updateUserById,
+  findAndDeleteTokenByIdAndType,
+  insertToken,
+} from "@/db/index";
 
 const handler = nc();
 
 handler.use(database);
 
 handler.post(async (req, res) => {
+  console.log({
+    user: process.env.EMAIL_FROM,
+    clientId: process.env.CLIENT_ID,
+    clientSecret: process.env.CLEINT_SECRET,
+    refreshToken: process.env.REFRESH_TOKEN,
+  });
   const user = await findUserByEmail(req.db, req.body.email);
   if (!user) {
-    res.status(401).send('The email is not found');
+    res.status(401).send("The email is not found");
     return;
   }
 
   const token = await insertToken(req.db, {
     creatorId: user._id,
-    type: 'passwordReset',
+    type: "passwordReset",
     expireAt: new Date(Date.now() + 1000 * 60 * 20),
   });
 
   const msg = {
-    to: user.email,
+    to: process.env.EMAIL_FROM,
     from: process.env.EMAIL_FROM,
-    subject: '[nextjs-mongodb-app] Reset your password.',
+    subject: "Reset your password for o-CEO Portal.",
     html: `
       <div>
         <p>Hello, ${user.name}</p>
@@ -34,26 +43,30 @@ handler.post(async (req, res) => {
       </div>
       `,
   };
-  await sendMail(msg);
-  res.end('ok');
+  await sendEmail(msg);
+  res.end("ok");
 });
 
 handler.put(async (req, res) => {
   // password reset
   if (!req.body.password) {
-    res.status(400).send('Password not provided');
+    res.status(400).send("Password not provided");
     return;
   }
 
-  const deletedToken = await findAndDeleteTokenByIdAndType(req.db, req.body.token, 'passwordReset');
+  const deletedToken = await findAndDeleteTokenByIdAndType(
+    req.db,
+    req.body.token,
+    "passwordReset"
+  );
 
   if (!deletedToken) {
-    res.status(403).send('This link may have been expired.');
+    res.status(403).send("This link may have been expired.");
     return;
   }
   const password = await bcrypt.hash(req.body.password, 10);
   await updateUserById(req.db, deletedToken.creatorId, { password });
-  res.end('ok');
+  res.end("ok");
 });
 
 export default handler;
