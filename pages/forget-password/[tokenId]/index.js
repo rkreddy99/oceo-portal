@@ -10,11 +10,8 @@ const ResetPasswordTokenPage = ({ tokenId, valid }) => {
     message: "Enter the new password",
     isError: false,
   });
-  console.log(tokenId, valid);
   async function handleSubmit(event) {
     event.preventDefault();
-    console.log(event.currentTarget.password.value);
-    console.log(event.currentTarget.new_password.value);
     if (
       event.currentTarget.password.value ===
       event.currentTarget.new_password.value
@@ -90,21 +87,16 @@ const ResetPasswordTokenPage = ({ tokenId, valid }) => {
 };
 
 export async function getServerSideProps(ctx) {
-  console.log(ctx.query);
   const handler = nc();
   handler.use(database);
   await handler.run(ctx.req, ctx.res);
   const { tokenId } = ctx.query;
-
-  console.log(tokenId);
 
   const tokenDoc = await findTokenByIdAndType(
     ctx.req.db,
     ctx.query.tokenId,
     "passwordReset"
   );
-
-  console.log(tokenDoc);
 
   return { props: { tokenId, valid: !!tokenDoc } };
 }

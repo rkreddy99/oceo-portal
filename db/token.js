@@ -16,7 +16,6 @@ export function findAndDeleteTokenByIdAndType(db, id, type) {
 
 export function insertToken(db, { creatorId, type, expireAt }) {
   const securedTokenId = nanoid(32);
-  console.log("function called");
   return db
     .collection("tokens")
     .insertOne({

@@ -20,15 +20,11 @@ handler.post(async (req, res) => {
     return;
   }
 
-  console.log("inserting token");
-
   const token = await insertToken(req.db, {
     creatorId: user._id,
     type: "passwordReset",
     expireAt: new Date(Date.now() + 1000 * 60 * 20),
   });
-
-  console.log(token);
 
   const msg = {
     to: process.env.EMAIL_FROM,
@@ -46,7 +42,6 @@ handler.post(async (req, res) => {
 });
 
 handler.put(async (req, res) => {
-  console.log("resetting");
   // password reset
   if (!req.body.password) {
     res.status(400).send("Password not provided");
