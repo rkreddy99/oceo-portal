@@ -14,12 +14,6 @@ const handler = nc();
 handler.use(database);
 
 handler.post(async (req, res) => {
-  console.log({
-    user: process.env.EMAIL_FROM,
-    clientId: process.env.CLIENT_ID,
-    clientSecret: process.env.CLEINT_SECRET,
-    refreshToken: process.env.REFRESH_TOKEN,
-  });
   const user = await findUserByEmail(req.db, req.body.email);
   if (!user) {
     res.status(401).send("The email is not found");
@@ -56,7 +50,7 @@ handler.put(async (req, res) => {
 
   const deletedToken = await findAndDeleteTokenByIdAndType(
     req.db,
-    req.body.token,
+    req.body.tokenId,
     "passwordReset"
   );
 
