@@ -14,23 +14,21 @@ const handler = nc();
 handler.use(database);
 
 handler.post(async (req, res) => {
-  console.log({
-    user: process.env.EMAIL_FROM,
-    clientId: process.env.CLIENT_ID,
-    clientSecret: process.env.CLEINT_SECRET,
-    refreshToken: process.env.REFRESH_TOKEN,
-  });
   const user = await findUserByEmail(req.db, req.body.email);
   if (!user) {
     res.status(401).send("The email is not found");
     return;
   }
 
+  console.log("inserting token");
+
   const token = await insertToken(req.db, {
     creatorId: user._id,
     type: "passwordReset",
     expireAt: new Date(Date.now() + 1000 * 60 * 20),
   });
+
+  console.log(token);
 
   const msg = {
     to: process.env.EMAIL_FROM,
@@ -48,6 +46,7 @@ handler.post(async (req, res) => {
 });
 
 handler.put(async (req, res) => {
+  console.log("resetting");
   // password reset
   if (!req.body.password) {
     res.status(400).send("Password not provided");
@@ -56,7 +55,7 @@ handler.put(async (req, res) => {
 
   const deletedToken = await findAndDeleteTokenByIdAndType(
     req.db,
-    req.body.token,
+    req.body.tokenId,
     "passwordReset"
   );
 

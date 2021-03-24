@@ -1,4 +1,4 @@
-require('dotenv').config();
+require("dotenv").config();
 
 module.exports = {
   env: {
@@ -9,5 +9,9 @@ module.exports = {
     SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
     EMAIL_FROM: process.env.EMAIL_FROM,
     SESSION_SECRET: process.env.SESSION_SECRET,
+    EMAIL_FROM: process.env.EMAIL_FROM,
+    CLIENT_ID: process.env.CLIENT_ID,
+    CLEINT_SECRET: process.env.CLEINT_SECRET,
+    REFRESH_TOKEN: process.env.REFRESH_TOKEN,
   },
 };

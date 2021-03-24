@@ -5,6 +5,7 @@ const ForgetPasswordPage = () => {
   const [msg, setMsg] = useState({ message: '', isError: false });
 
   async function handleSubmit(e) {
+    setMsg({ message: 'Sending email with the link to update password' });
     e.preventDefault(e);
 
     const body = {
@@ -32,12 +33,12 @@ const ForgetPasswordPage = () => {
       <h2>Forget password</h2>
       {msg.message ? <p style={{ color: msg.isError ? 'red' : '#0070f3', textAlign: 'center' }}>{msg.message}</p> : null}
       <form onSubmit={handleSubmit}>
-        <p>Do not worry. Simply enter your email address below.</p>
         <label htmlFor="email">
           <input
+            required
             id="email"
             type="email"
-            placeholder="Email"
+            placeholder="Enter your email address."
           />
         </label>
         <button type="submit">Submit</button>
