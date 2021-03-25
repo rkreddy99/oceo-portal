@@ -1,22 +1,20 @@
-import React from 'react';
-import Head from 'next/head';
-import Link from 'next/link';
-import Error from 'next/error';
-import { all } from '@/middlewares/index';
-import { useCurrentUser } from '@/hooks/index';
-import Posts from '@/components/post/posts';
-import { extractUser } from '@/lib/api-helpers';
-import { findUserById, findPostById } from '@/db/index';
-import { defaultProfilePicture } from '@/lib/default';
-import { Applications } from '@/components/post/posts';
+import React from "react";
+import Head from "next/head";
+import Link from "next/link";
+import Error from "next/error";
+import { all } from "@/middlewares/index";
+import { useCurrentUser } from "@/hooks/index";
+import Posts from "@/components/post/posts";
+import { extractUser } from "@/lib/api-helpers";
+import { findUserById, findPostById } from "@/db/index";
+import { defaultProfilePicture } from "@/lib/default";
+import { Applications } from "@/components/post/posts";
 
 export default function UserPage({ user, posts }) {
   if (!user) return <Error statusCode={404} />;
-  const {
-    name, email, bio, profilePicture, _id
-  } = user || {};
+  const { name, email, bio, profilePicture, _id } = user || {};
   // const posts = posts;
-  const applications = posts.map((post) => JSON.parse(post))
+  const applications = posts.map((post) => JSON.parse(post));
   const [currentUser] = useCurrentUser();
   const isCurrentUser = currentUser?._id === user._id;
   return (
@@ -59,16 +57,16 @@ export default function UserPage({ user, posts }) {
       <div>
         {/* <img src={profilePicture || defaultProfilePicture(_id)} width="256" height="256" alt={name} /> */}
         {/* <section> */}
-            <h2>{name}</h2>
-            {isCurrentUser && (
-            <Link href="/settings">
-              <a>Edit Profile</a>
-            </Link>
-            )}
-            <br/>
-          {/* Bio
+        <h2>{name}</h2>
+        {isCurrentUser && (
+          <Link href="/settings">
+            <a>Edit Profile</a>
+          </Link>
+        )}
+        <br />
+        {/* Bio
           <p>{bio}</p> */}
-          {/* Email
+        {/* Email
           <p>
             {email}
           </p>
@@ -76,14 +74,17 @@ export default function UserPage({ user, posts }) {
         {/* </section> */}
       </div>
       <div>
-        {user?.role == 'student' ? 
-        [
-          <h3>My Applications</h3>,
-          (applications.map(post => <Applications post={post}/>))
-        ]
-         :
-        (<><h3>Posts</h3>
-        <Posts creatorId={user?._id} /></>)}
+        {user?.role == "student" ? (
+          [
+            <h3>My Applications</h3>,
+            applications.map((post) => <Applications post={post} />),
+          ]
+        ) : (
+          <>
+            <h3>Posts</h3>
+            <Posts creatorId={user?._id} />
+          </>
+        )}
       </div>
     </>
   );
@@ -91,13 +92,15 @@ export default function UserPage({ user, posts }) {
 
 export async function getServerSideProps(context) {
   await all.run(context.req, context.res);
-  const user = extractUser(await findUserById(context.req.db, context.params.userId));
+  const user = extractUser(
+    await findUserById(context.req.db, context.params.userId)
+  );
   if (!user) context.res.statusCode = 404;
   const postIds = user?.posts;
   const posts = new Array(postIds?.length).fill(null);
   for (let index = 0; index < postIds.length; index++) {
     const element = postIds[index];
-    posts[index] = await findPostById(context.req.db, element)
+    posts[index] = await findPostById(context.req.db, element);
   }
   return { props: { user, posts } };
 }
