@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Head from 'next/head';
-import { useCurrentUser } from '@/hooks/index';
+import React, { useState, useEffect, useRef } from "react";
+import Head from "next/head";
+import { useCurrentUser } from "@/hooks/index";
 
 const ProfileSection = () => {
   const [user, { mutate }] = useCurrentUser();
@@ -9,7 +9,7 @@ const ProfileSection = () => {
   const bioRef = useRef();
   const profilePictureRef = useRef();
   const resumeRef = useRef();
-  const [msg, setMsg] = useState({ message: '', isError: false });
+  const [msg, setMsg] = useState({ message: "", isError: false });
 
   useEffect(() => {
     nameRef.current.value = user.name;
@@ -21,12 +21,16 @@ const ProfileSection = () => {
     if (isUpdating) return;
     setIsUpdating(true);
     const formData = new FormData();
-    if (profilePictureRef.current.files[0]) { formData.append('profilePicture', profilePictureRef.current.files[0]); }
-    if (resumeRef.current.files[0]) { formData.append('resume', resumeRef.current.files[0]); }
-    formData.append('name', nameRef.current.value);
-    formData.append('bio', bioRef.current.value);
-    const res = await fetch('/api/user', {
-      method: 'PATCH',
+    if (profilePictureRef.current.files[0]) {
+      formData.append("profilePicture", profilePictureRef.current.files[0]);
+    }
+    if (resumeRef.current.files[0]) {
+      formData.append("resume", resumeRef.current.files[0]);
+    }
+    formData.append("name", nameRef.current.value);
+    formData.append("bio", bioRef.current.value);
+    const res = await fetch("/api/user", {
+      method: "PATCH",
       body: formData,
     });
     if (res.status === 200) {
@@ -37,7 +41,7 @@ const ProfileSection = () => {
           ...userData.user,
         },
       });
-      setMsg({ message: 'Profile updated' });
+      setMsg({ message: "Profile updated" });
     } else {
       setMsg({ message: await res.text(), isError: true });
     }
@@ -50,28 +54,28 @@ const ProfileSection = () => {
       oldPassword: e.currentTarget.oldPassword.value,
       newPassword: e.currentTarget.newPassword.value,
     };
-    e.currentTarget.oldPassword.value = '';
-    e.currentTarget.newPassword.value = '';
+    e.currentTarget.oldPassword.value = "";
+    e.currentTarget.newPassword.value = "";
 
-    const res = await fetch('/api/user/password', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+    const res = await fetch("/api/user/password", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
 
     if (res.status === 200) {
-      setMsg({ message: 'Password updated' });
+      setMsg({ message: "Password updated" });
     } else {
       setMsg({ message: await res.text(), isError: true });
     }
   };
 
   async function sendVerificationEmail() {
-    const res = await fetch('/api/user/email/verify', {
-      method: 'POST',
+    const res = await fetch("/api/user/email/verify", {
+      method: "POST",
     });
     if (res.status === 200) {
-      setMsg({ message: 'An email has been sent to your mailbox' });
+      setMsg({ message: "An email has been sent to your mailbox" });
     } else {
       setMsg({ message: await res.text(), isError: true });
     }
@@ -84,16 +88,23 @@ const ProfileSection = () => {
       </Head>
       <section>
         <h2>Edit Profile</h2>
-        {msg.message ? <p style={{ color: msg.isError ? 'red' : '#0070f3', textAlign: 'center' }}>{msg.message}</p> : null}
+        {msg.message ? (
+          <p
+            style={{
+              color: msg.isError ? "red" : "#0070f3",
+              textAlign: "center",
+            }}
+          >
+            {msg.message}
+          </p>
+        ) : null}
         <form onSubmit={handleSubmit}>
           {!user.emailVerified ? (
             <p>
-              Your email has not been verify.
-              {' '}
-              {/* eslint-disable-next-line */}
-                <a role="button" onClick={sendVerificationEmail}>
-                  Send verification email
-                </a>
+              Your email has not been verify. {/* eslint-disable-next-line */}
+              <a role="button" onClick={sendVerificationEmail}>
+                Send verification email
+              </a>
             </p>
           ) : null}
           <label htmlFor="name">
@@ -137,7 +148,9 @@ const ProfileSection = () => {
               ref={resumeRef}
             />
           </label>
-          <button disabled={isUpdating} type="submit">Save</button>
+          <button disabled={isUpdating} type="submit">
+            Save
+          </button>
         </form>
         <form onSubmit={handleSubmitPasswordChange}>
           <label htmlFor="oldpassword">
