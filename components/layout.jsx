@@ -45,44 +45,44 @@ export default function Layout({ children }) {
             align-items: center;
             width: 100%;
           }
-          form {
-            margin-bottom: 0.5rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-          }
-          input,
-          textarea {
-            font-family: monospace;
-            flex: 1 1 0%;
-            margin-left: 0.5rem;
-            box-shadow: none;
-            width: 100%;
-            color: #000;
-            background-color: transparent;
-            border: 1px solid #d8d8d8;
-            border-radius: 5px;
-            outline: 0px;
-            padding: 10px 25px;
-          }
-          button {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #fff;
-            border-radius: 5px;
-            border: none;
-            background-color: #000;
-            cursor: pointer;
-            transition: all 0.2s ease 0s;
-            padding: 10px 25px;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.12);
-          }
-          button:hover,
-          button:active {
-            transform: translate3d(0px, -1px, 0px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-          }
+          // form {
+          //   margin-bottom: 0.5rem;
+          //   display: flex;
+          //   flex-direction: column;
+          //   justify-content: center;
+          //   align-items: center;
+          // }
+          // input,
+          // textarea {
+          //   font-family: monospace;
+          //   flex: 1 1 0%;
+          //   margin-left: 0.5rem;
+          //   box-shadow: none;
+          //   width: 100%;
+          //   color: #000;
+          //   background-color: transparent;
+          //   border: 1px solid #d8d8d8;
+          //   border-radius: 5px;
+          //   outline: 0px;
+          //   padding: 10px 25px;
+          // }
+          // button {
+          //   display: block;
+          //   margin-bottom: 0.5rem;
+          //   color: #fff;
+          //   border-radius: 5px;
+          //   border: none;
+          //   background-color: #000;
+          //   cursor: pointer;
+          //   transition: all 0.2s ease 0s;
+          //   padding: 10px 25px;
+          //   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.12);
+          // }
+          // button:hover,
+          // button:active {
+          //   transform: translate3d(0px, -1px, 0px);
+          //   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+          // }
           header {
             border-bottom: 1px solid #d8d8d8;
           }
@@ -166,6 +166,9 @@ export default function Layout({ children }) {
               <>
                 <Link href={`/user/${user._id}`}>
                   <a> My Profile</a>
+                </Link>
+                <Link href={`/user/${user._id}/timecard`}>
+                  <a> Timecard</a>
                 </Link>
                 {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                 <a tabIndex={0} role="button" onClick={handleLogout}>
