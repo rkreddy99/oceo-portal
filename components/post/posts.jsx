@@ -3,6 +3,7 @@ import { useSWRInfinite } from "swr";
 import Link from "next/link";
 import { useUser } from "@/hooks/index";
 import fetcher from "@/lib/fetch";
+import { Button } from "reactstrap";
 import { defaultProfilePicture } from "@/lib/default";
 import { useCurrentUser } from "@/hooks/index";
 
@@ -89,6 +90,14 @@ function Post({ post }) {
               color: green;
               font-weight: 600;
             }
+            #approved {
+              color: green;
+              font-weight: 600;
+            }
+            #not-approved {
+              color: red;
+              font-weight: 600;
+            }
           `}
         </style>
         <div>
@@ -124,25 +133,33 @@ function Post({ post }) {
                   </Link>,
                 ]
               : null}
+            <br />
+            <br />
+            {post?.creatorId == currentUser?._id && post?.approved ? (
+              <p id="approved">Approved</p>
+            ) : post?.creatorId == currentUser?._id &&
+              post?.approved == false ? (
+              <p id="not-approved">Not Yet Approved</p>
+            ) : null}
           </p>
           {/* <small>{new Date(post.createdAt).toLocaleString()}</small> */}
           {currentUser?.role == "student" ? (
             currentUser?.posts.includes(post?._id) ? (
               <p id="applied">Applied!</p>
             ) : (
-              <button type="button" onClick={apply}>
+              <Button type="button" onClick={apply}>
                 Apply
-              </button>
+              </Button>
             )
           ) : null}
           {currentUser?.role == "admin" ? (
             <>
-              <button type="button" onClick={() => approve(true, post)}>
+              <Button type="button" onClick={() => approve(true, post)}>
                 Approve
-              </button>
-              <button type="button" onClick={() => approve(false, post)}>
+              </Button>
+              <Button type="button" onClick={() => approve(false, post)}>
                 Delete
-              </button>
+              </Button>
             </>
           ) : null}
         </div>

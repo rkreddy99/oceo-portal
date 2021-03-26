@@ -1,8 +1,19 @@
 import React, { useState } from "react";
 import { useCurrentUser } from "@/hooks/index";
-import DatePicker from "react-datepicker";
+import DatePicker from "reactstrap-date-picker";
 import "react-datepicker/dist/react-datepicker.css";
 import { registerLocale, setDefaultLocale } from "react-datepicker";
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Alert,
+} from "reactstrap";
 import enIN from "date-fns/locale/en-IN";
 registerLocale("enIN", enIN);
 
@@ -16,14 +27,13 @@ export default function PostEditor() {
   if (!user) {
     return (
       <div style={{ color: "#555", textAlign: "center" }}>
-        Please sign in to post
+        <Alert color="danger">Please sign in to post</Alert>
       </div>
     );
   }
 
-  async function hanldeSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    setdeadline(null);
     const body = {
       title: e.currentTarget.title.value,
       description: e.currentTarget.description.value,
@@ -31,7 +41,8 @@ export default function PostEditor() {
       approved: false,
       deadline: deadline,
     };
-    // console.log(JSON.stringify(body))
+    setdeadline(null);
+    console.log(JSON.stringify(body));
     // if (!e.currentTarget.content.value) return;
     e.currentTarget.title.value = "";
     e.currentTarget.description.value = "";
@@ -49,55 +60,90 @@ export default function PostEditor() {
 
   return (
     <>
-      <p style={{ color: "#0070f3", textAlign: "center" }}>{msg}</p>
-      <form
-        onSubmit={hanldeSubmit}
-        style={{ flexDirection: "column" }}
-        autoComplete="off"
-      >
-        <label htmlFor="title">
-          <input
-            required
-            id="title"
-            name="title"
-            type="text"
-            placeholder="Title"
-          />
-        </label>
-        <label htmlFor="description">
-          <input
-            required
-            id="description"
-            name="description"
-            type="text"
-            placeholder="Description"
-          />
-        </label>
-        <label htmlFor="eligibility">
-          <input
-            required
-            id="eligibility"
-            name="eligibility"
-            type="text"
-            placeholder="Eligibility"
-          />
-        </label>
-        <label htmlFor="deadline">
-          <DatePicker
-            selected={deadline}
-            onChange={(date) => setdeadline(date)}
-            minDate={new Date()}
-            locale="enIN"
-            placeholderText="Date of deadline"
-          />
-        </label>
-        <button type="submit" style={{ marginLeft: "0.5rem" }}>
-          Post
-        </button>
-        <button type="reset" style={{ marginLeft: "0.5rem" }}>
-          Discard
-        </button>
-      </form>
+      <h2>Create an opportunity</h2>
+      {msg ? (
+        <>
+          <br />
+          <Col sm="12" md={{ size: 6, offset: 3 }}>
+            <Alert color="success">{msg}</Alert>
+          </Col>
+          <br />
+        </>
+      ) : null}
+      <Container>
+        <div id="alert-space"></div>
+        <Form onSubmit={handleSubmit}>
+          <Row form>
+            <Col sm="12" md={{ size: 6, offset: 3 }}>
+              <FormGroup>
+                <Label for="name">
+                  <h5>Title</h5>
+                </Label>
+                <Input
+                  required
+                  type="text"
+                  name="title"
+                  id="title"
+                  placeholder="Title"
+                />
+              </FormGroup>
+            </Col>
+          </Row>
+          <Row form>
+            <Col sm="12" md={{ size: 6, offset: 3 }}>
+              <FormGroup>
+                <Label for="description">
+                  <h5>Description</h5>
+                </Label>
+                <Input
+                  required
+                  type="text"
+                  name="description"
+                  id="description"
+                  placeholder="Description"
+                />
+              </FormGroup>
+            </Col>
+          </Row>
+          <Row form>
+            <Col sm="12" md={{ size: 6, offset: 3 }}>
+              <FormGroup>
+                <Label for="password">
+                  <h5>Eligibility</h5>
+                </Label>
+                <Input
+                  required
+                  type="text"
+                  name="eligibility"
+                  id="eligibility"
+                  placeholder="Eligibility"
+                />
+              </FormGroup>
+            </Col>
+          </Row>
+          <Row form>
+            <Col sm="12" md={{ size: 6, offset: 3 }}>
+              <FormGroup>
+                <Label for="deadline">
+                  <h5>Deadline Date</h5>
+                </Label>
+                <DatePicker
+                  required
+                  value={deadline}
+                  onChange={(date) => setdeadline(date)}
+                  minDate={new Date().toISOString()}
+                  locale="enIN"
+                  placeholderText="Date of deadline"
+                  valid
+                />
+              </FormGroup>
+            </Col>
+          </Row>
+          <Col sm="12" md={{ size: 8, offset: 3 }}>
+            <Button>Submit</Button>
+          </Col>
+        </Form>
+      </Container>
     </>
   );
 }

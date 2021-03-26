@@ -4,6 +4,17 @@ import nc from "next-connect";
 import Router from "next/router";
 import { database } from "@/middlewares/index";
 import { findTokenByIdAndType } from "@/db/index";
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Alert,
+} from "reactstrap";
 
 const ResetPasswordTokenPage = ({ tokenId, valid }) => {
   const [msg, setMsg] = useState({
@@ -48,36 +59,54 @@ const ResetPasswordTokenPage = ({ tokenId, valid }) => {
       <h2>Forget password</h2>
       {valid ? (
         <>
-          {msg.message ? (
-            <p
-              style={{
-                color: msg.isError ? "red" : "#0070f3",
-                textAlign: "center",
-              }}
-            >
-              {msg.message}
-            </p>
+          <br />
+          {msg.isError && msg.message ? (
+            <>
+              <Col sm="12" md={{ size: 6, offset: 3 }}>
+                <Alert color="danger">{msg.message}</Alert>
+              </Col>
+            </>
           ) : null}
-          <form onSubmit={handleSubmit}>
-            <div>
-              <input
-                required
-                name="password"
-                type="password"
-                placeholder="Enter the new password"
-              />
-              <br />
-              <br />
-              <input
-                required
-                name="new_password"
-                type="password"
-                placeholder="Re-enter the password"
-              />
-            </div>
-            <br />
-            <button type="submit">Set new password</button>
-          </form>
+          <Container>
+            <div id="alert-space"></div>
+            <Form onSubmit={handleSubmit}>
+              <Row form>
+                <Col sm="12" md={{ size: 6, offset: 3 }}>
+                  <FormGroup>
+                    <Label for="password">
+                      <h5>New Password</h5>
+                    </Label>
+                    <Input
+                      required
+                      type="password"
+                      name="password"
+                      id="password"
+                      placeholder="Enter new password"
+                    />
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row form>
+                <Col sm="12" md={{ size: 6, offset: 3 }}>
+                  <FormGroup>
+                    <Label for="new_password"></Label>
+                    <Input
+                      required
+                      type="password"
+                      name="new_password"
+                      id="new_password"
+                      placeholder="Re-enter the password"
+                    />
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row>
+                <Col md={{ size: "auto", offset: 3 }}>
+                  <Button>Submit</Button>
+                </Col>
+              </Row>
+            </Form>
+          </Container>
         </>
       ) : (
         <p>This link may have been expired</p>
