@@ -8,19 +8,20 @@ export async function getPosts(
   approved,
   deadlineDate
 ) {
+  const _find = {
+    // Pagination: Fetch posts from before the input date or fetch from newest
+    ...(from && {
+      createdAt: {
+        $lte: from,
+      },
+    }),
+    ...(by && { creatorId: by }),
+    ...(approved != null && { approved: approved === true }),
+    ...(deadlineDate && { deadline: { $gte: deadlineDate } }),
+  };
   return db
     .collection("posts")
-    .find({
-      // Pagination: Fetch posts from before the input date or fetch from newest
-      ...(from && {
-        createdAt: {
-          $lte: from,
-        },
-      }),
-      ...(by && { creatorId: by }),
-      ...{ approved: approved === true },
-      ...(deadlineDate && { deadline: { $gte: deadlineDate } }),
-    })
+    .find(_find)
     .sort({ createdAt: -1 })
     .limit(limit || 10)
     .toArray();
