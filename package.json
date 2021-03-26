@@ -41,9 +41,10 @@
     "react": "^17.0.2",
     "react-datepicker": "^3.6.0",
     "react-dom": "^17.0.2",
-    "reactstrap": "^8.9.0",
     "react-select": "^4.3.0",
     "react-select-search": "^3.0.5",
+    "reactstrap": "^8.9.0",
+    "reactstrap-date-picker": "^0.0.11",
     "safe-json-stringify": "^1.2.0",
     "swr": "^0.3.9",
     "validator": "^13.1.17"

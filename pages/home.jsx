@@ -11,7 +11,7 @@ const Home = () => {
     return (
       <>
         <div>
-          <h3>Create an opportunity</h3>
+          {/* <h3>Create an opportunity</h3> */}
           <PostEditor />
         </div>
       </>
