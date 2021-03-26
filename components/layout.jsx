@@ -1,18 +1,18 @@
-import React from 'react';
-import Head from 'next/head';
-import {useRouter} from "next/router";
-import Link from 'next/link';
-import { useCurrentUser } from '@/hooks/index';
+import React from "react";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import { useCurrentUser } from "@/hooks/index";
 
 export default function Layout({ children }) {
   const [user, { mutate }] = useCurrentUser();
   const route = useRouter();
   const handleLogout = async () => {
-    await fetch('/api/auth', {
-      method: 'DELETE',
+    await fetch("/api/auth", {
+      method: "DELETE",
     });
     mutate(null);
-    await route.replace('/');
+    await route.replace("/");
   };
   return (
     <>
@@ -30,9 +30,9 @@ export default function Layout({ children }) {
             margin: 0;
             padding: 0;
             color: #111;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
-              'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
-              'Helvetica Neue', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+              "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+              "Helvetica Neue", sans-serif;
             background-color: #fff;
           }
           h2 {
@@ -106,7 +106,7 @@ export default function Layout({ children }) {
             float: left;
           }
           nav:after {
-            content: '';
+            content: "";
             clear: both;
             display: table;
           }
@@ -183,4 +183,4 @@ export default function Layout({ children }) {
       <main>{children}</main>
     </>
   );
-};
+}
