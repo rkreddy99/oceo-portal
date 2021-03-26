@@ -2,7 +2,7 @@ import nc from "next-connect";
 import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
 import { all } from "@/middlewares/index";
-import { updateUserById, updateUserPosts } from "@/db/index";
+import { updateUserById, updateUserPosts, updateSelectedCandidates } from "@/db/index";
 import { extractUser } from "@/lib/api-helpers";
 
 const upload = multer({ dest: "/tmp" });
@@ -36,6 +36,7 @@ handler.patch(upload.single("profilePicture"), async (req, res) => {
     return;
   }
 
+
   if (req.applying || req.body.applying) {
     const user = await updateUserPosts(
       req.db,
@@ -43,7 +44,16 @@ handler.patch(upload.single("profilePicture"), async (req, res) => {
       req.body.postid
     );
     res.json({ user: extractUser(user) });
-  } else {
+  } 
+  else if(req.selectedapplicant || req.body.selectedapplicant) {
+    const user = await updateSelectedCandidates(      
+      req.db,
+      req.body.userid,
+      req.body.postid
+    );
+    res.json({ user: extractUser(user) });
+  }
+  else {
     let profilePicture;
     if (req.file) {
       const image = await cloudinary.uploader.upload(req.file.path, {

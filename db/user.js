@@ -44,10 +44,29 @@ export async function updateUserPosts(db, userid, postid) {
     .then(({ value }) => value);
   return updateUserPost;
 }
+export async function updateSelectedCandidates(db, userid, postid){
+  const updateSelectedCandidate = await db
+  .collection("users")
+  .findOneAndUpdate(
+    { _id: userid },
+    { $push: { selectedPosts: postid } },
+    { returnOriginal: false }
+  )
+  .then(({ value }) => value);
+  const updatePostSelectedApplicants = await db
+    .collection("posts")
+    .findOneAndUpdate(
+      { _id: postid },
+      { $push: { selected_applicants: userid } },
+      { returnOriginal: false }
+    )
+    .then(({ value }) => value);
+    return updateSelectedCandidate;
+}
 
 export async function insertUser(
   db,
-  { email, password, bio = "", name, profilePicture, role, posts }
+  { email, password, bio = "", name, profilePicture, role, posts, selectedPosts }
 ) {
   return db
     .collection("users")
@@ -61,6 +80,7 @@ export async function insertUser(
       bio,
       role,
       posts,
+      selectedPosts
     })
     .then(({ ops }) => ops[0]);
 }

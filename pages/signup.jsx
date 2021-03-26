@@ -19,6 +19,7 @@ const SignupPage = () => {
       password: e.currentTarget.password.value,
       role: e.currentTarget.role.value,
       posts: [],
+      selectedPosts: []
     };
     const res = await fetch("/api/users", {
       method: "POST",

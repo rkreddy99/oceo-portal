@@ -135,6 +135,7 @@ function Post({ post }) {
               </button>
             )
           ) : null}
+          
           {currentUser?.role == "admin" ? (
             <>
               <button type="button" onClick={() => approve(true, post)}>
