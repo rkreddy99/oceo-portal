@@ -229,7 +229,7 @@ export const Applications = ({ post }) => {
   if (post != null) {
     return (
       <div>
-        <Post key={post?._id} post={post} />
+        <Post post={post} />
       </div>
     );
   } else {
