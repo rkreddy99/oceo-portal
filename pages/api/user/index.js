@@ -79,6 +79,19 @@ handler.patch(upload.single("profilePicture"), async (req, res) => {
       req.body
 
     );
+    const msg = {
+      to: req.body.useremail,
+      from: process.env.EMAIL_FROM,
+      subject: "oCEO Opportunity Status Update",
+      html: `
+        <div>
+          <p>Hello, ${req.body.username}</p>
+          <p>We are sorry to inform you that your application for working on oCEO job posting: ${req.body.posttitle} is rejected.</p>
+        </div>
+        `,
+    };
+    // console.log(req.body.email, req.)
+    await sendEmail(msg);
     res.json({ user: extractUser(user) });
   }
   

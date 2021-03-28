@@ -69,8 +69,9 @@ export async function updateUserPostsifSelected(db, userid, postid, userObj) {
       .collection("posts")
       .findOneAndUpdate(
         { _id: postid },
-        // { $set: {applicant} } },
-        { returnOriginal: false }
+        { $pull: {applicants: {userid: userid}} } ,
+        { returnOriginal: false },
+        {multi: true}
       )
       .then(({ value }) => value);    
   }

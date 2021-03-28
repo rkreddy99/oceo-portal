@@ -18,22 +18,30 @@ export default function showApplicants({post}) {
     const [applicants, setApplicants] = useState(post.applicants);
 
 
-    async function handleAccepted(event){
-        // console.log(event.target.getAttribute("userid"));
+    async function handleClick(event){
+        // console.log(event.target.getAttribute(" hre fldjs ljdsl jluserid"));
         var formData = new FormData;
-        // console.log(event.target.getAttribute("applicant"));
+        if(event.target.getAttribute("selected")){
+            formData.append("selected", "true");
+        }
+        else{
+            console.log("rejected 1");
+            formData.append("rejected", "true");
+        }
+        console.log(event.target.getAttribute("rejected"));
         formData.append("userid", event.target.getAttribute("userid"));
         formData.append("username", event.target.getAttribute("username"));
         formData.append("useremail", event.target.getAttribute("useremail"));
         formData.append("posttitle", post.title);
         formData.append("postid", post._id);
-        formData.append("selected", true);
+        
         const res = await fetch("/api/user", {
             method: "PATCH",
             body: formData,
           });
           
         if (res.status === 200) {
+            alert("automatic email sent to student regarding update!")
             const userData = await res.json();
             mutate({
                 
@@ -47,14 +55,12 @@ export default function showApplicants({post}) {
         else{
             console.log("failed application contact admin.")
         }
-        alert("automatic email sent to selected student!")
+        
         window.location.reload();
     }
-    async function handleRejected(){
-
-    }
-    async function handleEmail(){
-
+    async function handleEmail(event){
+        alert(`mail id of applicant is ${event.target.getAttribute("useremail")}`)
+        
     }
 
     return (
@@ -68,13 +74,15 @@ export default function showApplicants({post}) {
                     <CardTitle tag="h6" className="mb-2 text-muted">{`CPI: ${applicant.cpi}`}</CardTitle>
                     <a href={applicant.resume} style={{padding: "70px 0px !important"}}>Applicant Resume</a>
                     <CardText>{applicant.sop}</CardText>
-                    <Button style={{backgroundColor:"#5b92e5"}} onClick={handleAccepted} 
+                    <Button style={{backgroundColor:"#5b92e5"}} onClick={handleClick} 
                     userid={applicant.userid} username={applicant.name}
-                    useremail={applicant.email}
+                    useremail={applicant.email} selected={"true"}
                     >Accept
                     </Button>
-                    <Button style={{backgroundColor:"red"}} onClick={handleRejected}>Reject</Button>
-                    <Button style={{backgroundColor:"orange"}} onClick={handleEmail}>Email</Button>
+                    <Button style={{backgroundColor:"red"}} onClick={handleClick} 
+                    userid={applicant.userid} username={applicant.name}
+                    useremail={applicant.email} rejected={"true"}>Reject</Button>
+                    <Button style={{backgroundColor:"orange"}} useremail={applicant.email} href={`mailto:${applicant.email}`} onClick={handleEmail} target="_blank">Email</Button>
                     </CardBody>
                 </Card>):null
             )
