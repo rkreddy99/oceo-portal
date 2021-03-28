@@ -142,6 +142,7 @@ const ProfileSection = () => {
             Resume
             <input
               type="file"
+              enctype="multipart/form-data"
               id="resume"
               name="files"
               accept="application/pdf, application/docx, application/doc"

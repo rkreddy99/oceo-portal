@@ -35,7 +35,7 @@ export async function findPostById(db, postId) {
 
 export async function insertPost(
   db,
-  { title, description, eligibility, approved, applicants, creatorId, deadline }
+  { title, description, eligibility, approved, applicants, selectedApplicants, creatorId, deadline }
 ) {
   return db
     .collection("posts")
@@ -46,6 +46,7 @@ export async function insertPost(
       eligibility,
       approved,
       applicants,
+      selectedApplicants,
       creatorId,
       deadline: new Date(deadline),
       createdAt: new Date(),

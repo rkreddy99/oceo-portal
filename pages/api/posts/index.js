@@ -49,6 +49,7 @@ handler.post(async (req, res) => {
     eligibility: req.body.eligibility,
     approved: req.body.approved,
     applicants: [],
+    selectedApplicants: [],
     creatorId: req.user._id,
     deadline: req.body.deadline,
   });

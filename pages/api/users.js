@@ -13,6 +13,7 @@ handler.use(all);
 handler.post(async (req, res) => {
   const { name, password, role, posts } = req.body;
   const email = normalizeEmail(req.body.email);
+  const selectedPosts = [];
   if (!isEmail(email)) {
     res.status(400).send("The email you entered is invalid.");
     return;
@@ -33,6 +34,7 @@ handler.post(async (req, res) => {
     name,
     role,
     posts,
+    selectedPosts
   });
   req.logIn(user, (err) => {
     if (err) throw err;

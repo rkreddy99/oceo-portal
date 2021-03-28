@@ -12,7 +12,7 @@ import { useCurrentUser } from "@/hooks/index";
 // Generate numbers range 0..4
 // range(0, 4, 1);
 var d = new Date;
-const yearList = range(2011,d.getFullYear(),1);
+const yearList = range(2011,d.getFullYear()+4,1);
 const programmeList = ["B. Tech", "M. Tech", "M. Sc", "MA"]
 const streamList = ["CSE", "EE", "Mechanical Eng.", "Chemical Eng.", "Material Science and Eng.", "Civil Eng."]
 export default function apply(props) {
@@ -23,16 +23,19 @@ export default function apply(props) {
         const userDetails = event.currentTarget;
         var formdata = new FormData();
         // formdata = event.currentTarget;
+        console.log(userDetails.graduatingYear.value);
         formdata.append("postid", props.post._id);
         formdata.append("applying", true);
         formdata.append("userid", props.user._id);
-        formdata.append("graduatingYear", userDetails.graduatingYear);
-        formdata.append("cpi", userDetails.cpi);
-        formdata.append("programme", userDetails.programme);
-        formdata.append("sop", userDetails.sop);
-        formdata.append("resume", userDetails.resume);
-        formdata.append("email", userDetails.email);
-        formdata.append("stream", userDetails.stream);
+        formdata.append("rejected", false);
+        formdata.append("graduatingYear", userDetails.graduatingYear.value);
+        formdata.append("cpi", userDetails.cpi.value);
+        formdata.append("name", userDetails.name.value);
+        formdata.append("programme", userDetails.programme.value);
+        formdata.append("sop", userDetails.sop.value);
+        formdata.append("resume", userDetails.resume.value);
+        formdata.append("email", userDetails.email.value);
+        formdata.append("stream", userDetails.stream.value);
         const res = await fetch("/api/user", {
             method: "PATCH",
             body: formdata,
@@ -88,7 +91,7 @@ export default function apply(props) {
                 <Col md={4}>
                     <FormGroup>
                     <Label>Programme</Label>
-                    <select name = "Programme">
+                    <select name = "programme">
                         {programmeList.map((year)=><option value={year}>{year}</option>)}
                     </select>
                     </FormGroup>
@@ -96,7 +99,7 @@ export default function apply(props) {
                 <Col md={4}>
                     <FormGroup>
                     <Label>Stream</Label>
-                    <select name = "Stream">
+                    <select name = "stream">
                         {streamList.map((year)=><option value={year}>{year}</option>)}
                     </select>
                     </FormGroup>

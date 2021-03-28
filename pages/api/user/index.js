@@ -2,9 +2,9 @@ import nc from "next-connect";
 import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
 import { all } from "@/middlewares/index";
-import { updateUserById, updateUserPosts } from "@/db/index";
+import { updateUserById, updateUserPosts, updateUserPostsifSelected } from "@/db/index";
 import { extractUser } from "@/lib/api-helpers";
-
+import { sendEmail } from "@/lib/mail";
 const upload = multer({ dest: "/tmp" });
 const handler = nc();
 
@@ -46,10 +46,42 @@ handler.patch(upload.single("profilePicture"), async (req, res) => {
       req.body
 
     );
-    console.log("in api");
-    console.log(req.body);
     res.json({ user: extractUser(user) });
   } 
+  else if(req.body.selected){
+    const user = await updateUserPostsifSelected(
+      req.db,
+      req.body.userid,
+      req.body.postid,
+      req.body
+
+    );
+    const msg = {
+      to: req.body.useremail,
+      from: process.env.EMAIL_FROM,
+      subject: "oCEO Selection Confirmation Email",
+      html: `
+        <div>
+          <p>Hello, ${req.body.username}</p>
+          <p>We are happy to inform you that you are accepted to work under oCEO job posting: ${req.body.posttitle}.</p>
+        </div>
+        `,
+    };
+    // console.log(req.body.email, req.)
+    await sendEmail(msg);
+    res.json({ user: extractUser(user) });
+  }
+  else if(req.body.rejected){
+    const user = await updateUserPostsifSelected(
+      req.db,
+      req.body.userid,
+      req.body.postid,
+      req.body
+
+    );
+    res.json({ user: extractUser(user) });
+  }
+  
   
   else {
     let profilePicture;

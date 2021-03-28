@@ -101,7 +101,14 @@ function Post({ post }) {
           `}
         </style>
         <div>
+        {post?.creatorId == currentUser?._id && post?.approved ? (
+              <p id="approved">Approved by admin</p>
+            ) : post?.creatorId == currentUser?._id &&
+              post?.approved == false ? (
+              <p id="not-approved">Pending admin approval</p>
+            ) : null}
           <p>
+
             <b>Title</b>
             <br />
             {post?.title}
@@ -135,12 +142,7 @@ function Post({ post }) {
               : null}
             <br />
             <br />
-            {post?.creatorId == currentUser?._id && post?.approved ? (
-              <p id="approved">Approved</p>
-            ) : post?.creatorId == currentUser?._id &&
-              post?.approved == false ? (
-              <p id="not-approved">Not Yet Approved</p>
-            ) : null}
+            
           </p>
           {/* <small>{new Date(post.createdAt).toLocaleString()}</small> */}
           {currentUser?.role == "student" ? (
@@ -152,7 +154,7 @@ function Post({ post }) {
               // </Button>
               <Link href={`/user/${currentUser?._id}/apply/${post?._id}`}>
               <Button type="button" onClick={console.log("button clicked",user)}>
-                {`View Application `}
+                {`Application Form`}
               </Button>
               
               </Link>
@@ -168,6 +170,11 @@ function Post({ post }) {
               </Button>
             </>
           ) : null}
+          {post?.creatorId == currentUser?._id && post?.approved ?
+          (<Link href={`/post/${post._id}/applicants`}>
+          <Button> View All Aplicants </Button></Link>):
+            null
+        }
         </div>
       </>
     );
