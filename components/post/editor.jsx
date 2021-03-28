@@ -42,7 +42,7 @@ export default function PostEditor() {
       deadline: deadline,
     };
     setdeadline(null);
-    console.log(JSON.stringify(body));
+    // console.log(JSON.stringify(body));
     // if (!e.currentTarget.content.value) return;
     e.currentTarget.title.value = "";
     e.currentTarget.description.value = "";

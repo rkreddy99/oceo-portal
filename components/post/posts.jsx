@@ -147,9 +147,15 @@ function Post({ post }) {
             currentUser?.posts.includes(post?._id) ? (
               <p id="applied">Applied!</p>
             ) : (
-              <Button type="button" onClick={apply}>
-                Apply
+              // <Button type="button" onClick={apply}>
+              //   Apply
+              // </Button>
+              <Link href={`/user/${currentUser?._id}/apply/${post?._id}`}>
+              <Button type="button" onClick={console.log("button clicked",user)}>
+                {`View Application `}
               </Button>
+              
+              </Link>
             )
           ) : null}
           {currentUser?.role == "admin" ? (

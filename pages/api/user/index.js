@@ -27,10 +27,12 @@ handler.get(async (req, res) => {
   // Filter out password
   if (!req.user) return res.json({ user: null });
   const { password, ...u } = req.user;
+  // console.log("in api get", u);
   res.json({ user: u });
 });
 
 handler.patch(upload.single("profilePicture"), async (req, res) => {
+  console.log("hello");
   if (!req.user) {
     req.status(401).end();
     return;
@@ -40,10 +42,16 @@ handler.patch(upload.single("profilePicture"), async (req, res) => {
     const user = await updateUserPosts(
       req.db,
       req.body.userid,
-      req.body.postid
+      req.body.postid,
+      req.body
+
     );
+    console.log("in api");
+    console.log(req.body);
     res.json({ user: extractUser(user) });
-  } else {
+  } 
+  
+  else {
     let profilePicture;
     if (req.file) {
       const image = await cloudinary.uploader.upload(req.file.path, {

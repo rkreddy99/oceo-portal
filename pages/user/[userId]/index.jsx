@@ -17,6 +17,7 @@ export default function UserPage({ user, posts }) {
   const applications = posts.map((post) => JSON.parse(post));
   const [currentUser] = useCurrentUser();
   const isCurrentUser = currentUser?._id === user._id;
+  // console.log(user.posts);
   return (
     <>
       <style jsx>

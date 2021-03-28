@@ -25,7 +25,7 @@ export async function updateUserById(db, id, update) {
     .then(({ value }) => value);
 }
 
-export async function updateUserPosts(db, userid, postid) {
+export async function updateUserPosts(db, userid, postid, userObj) {
   const updateUserPost = await db
     .collection("users")
     .findOneAndUpdate(
@@ -38,7 +38,7 @@ export async function updateUserPosts(db, userid, postid) {
     .collection("posts")
     .findOneAndUpdate(
       { _id: postid },
-      { $push: { applicants: userid } },
+      { $push: { applicants: userObj } },
       { returnOriginal: false }
     )
     .then(({ value }) => value);
