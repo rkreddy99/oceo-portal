@@ -35,7 +35,16 @@ export async function findPostById(db, postId) {
 
 export async function insertPost(
   db,
-  { title, description, eligibility, approved, applicants, selectedApplicants, creatorId, deadline }
+  {
+    title,
+    description,
+    eligibility,
+    approved,
+    applicants,
+    selectedApplicants,
+    creatorId,
+    deadline,
+  }
 ) {
   return db
     .collection("posts")
@@ -69,4 +78,23 @@ export async function deletePost(db, { postId, approve }) {
     const { result } = await db.collection("posts").deleteOne({ _id: postId });
     return result;
   }
+}
+
+export async function editPost(
+  db,
+  { postId, title, description, eligibility, approved, deadline }
+) {
+  const { value } = await db.collection("posts").findOneAndUpdate(
+    { _id: postId },
+    {
+      $set: {
+        title: title,
+        description: description,
+        eligibility: eligibility,
+        approved: approved === true,
+        deadline: deadline,
+      },
+    }
+  );
+  return value;
 }

@@ -6,6 +6,7 @@ import fetcher from "@/lib/fetch";
 import { Button } from "reactstrap";
 import { defaultProfilePicture } from "@/lib/default";
 import { useCurrentUser } from "@/hooks/index";
+import { MdEdit } from "react-icons/md";
 
 function Post({ post }) {
   const [currentUser, { mutate }] = useCurrentUser();
@@ -101,14 +102,12 @@ function Post({ post }) {
           `}
         </style>
         <div>
-        {post?.creatorId == currentUser?._id && post?.approved ? (
-              <p id="approved">Approved by admin</p>
-            ) : post?.creatorId == currentUser?._id &&
-              post?.approved == false ? (
-              <p id="not-approved">Pending admin approval</p>
-            ) : null}
+          {post?.creatorId == currentUser?._id && post?.approved ? (
+            <p id="approved">Approved by admin</p>
+          ) : post?.creatorId == currentUser?._id && post?.approved == false ? (
+            <p id="not-approved">Pending admin approval</p>
+          ) : null}
           <p>
-
             <b>Title</b>
             <br />
             {post?.title}
@@ -142,7 +141,6 @@ function Post({ post }) {
               : null}
             <br />
             <br />
-            
           </p>
           {/* <small>{new Date(post.createdAt).toLocaleString()}</small> */}
           {currentUser?.role == "student" ? (
@@ -153,10 +151,12 @@ function Post({ post }) {
               //   Apply
               // </Button>
               <Link href={`/user/${currentUser?._id}/apply/${post?._id}`}>
-              <Button type="button" onClick={console.log("button clicked",user)}>
-                {`Application Form`}
-              </Button>
-              
+                <Button
+                  type="button"
+                  onClick={console.log("button clicked", user)}
+                >
+                  {`Application Form`}
+                </Button>
               </Link>
             )
           ) : null}
@@ -170,11 +170,20 @@ function Post({ post }) {
               </Button>
             </>
           ) : null}
-          {post?.creatorId == currentUser?._id && post?.approved ?
-          (<Link href={`/post/${post._id}/applicants`}>
-          <Button> View All Aplicants </Button></Link>):
-            null
-        }
+          {post?.creatorId == currentUser?._id && post?.approved ? (
+            <Link href={`/post/${post._id}/applicants`}>
+              <Button> View All Aplicants </Button>
+            </Link>
+          ) : null}
+          {post?.creatorId == currentUser?._id ? (
+            <Link
+              href={`/edit-post?title=${post?.title}&eligibility=${post?.eligibility}&description=${post?.description}&deadline=${deadline}&id=${post?._id}`}
+            >
+              <Button>
+                <MdEdit />
+              </Button>
+            </Link>
+          ) : null}
         </div>
       </>
     );

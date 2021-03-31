@@ -1,6 +1,12 @@
 import nc from "next-connect";
 import { all } from "@/middlewares/index";
-import { getPosts, insertPost, approvePost, deletePost } from "@/db/index";
+import {
+  getPosts,
+  insertPost,
+  approvePost,
+  deletePost,
+  editPost,
+} from "@/db/index";
 
 const handler = nc();
 
@@ -64,6 +70,9 @@ handler.patch(async (req, res) => {
   let body = JSON.parse(req.body);
   if (body.approve === true) {
     const r = await approvePost(req.db, body);
+    return res.json({ r });
+  } else {
+    const r = await editPost(req.db, body);
     return res.json({ r });
   }
 });

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useCurrentUser } from "@/hooks/index";
 import DatePicker from "reactstrap-date-picker";
+import { useRouter } from "next/router";
 import "react-datepicker/dist/react-datepicker.css";
 import { registerLocale, setDefaultLocale } from "react-datepicker";
 import {
@@ -17,8 +18,12 @@ import {
 import enIN from "date-fns/locale/en-IN";
 registerLocale("enIN", enIN);
 
-export default function PostEditor() {
+export default function PostEditor({ post }) {
+  const route = useRouter();
+
   const [user] = useCurrentUser();
+
+  const edit = post ? true : false;
 
   const [deadline, setdeadline] = useState(null);
 
@@ -34,27 +39,44 @@ export default function PostEditor() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const body = {
+    const body = JSON.stringify({
+      postId: post?.id,
       title: e.currentTarget.title.value,
       description: e.currentTarget.description.value,
       eligibility: e.currentTarget.eligibility.value,
       approved: false,
       deadline: deadline,
-    };
+    });
     setdeadline(null);
-    // console.log(JSON.stringify(body));
     // if (!e.currentTarget.content.value) return;
+
     e.currentTarget.title.value = "";
     e.currentTarget.description.value = "";
     e.currentTarget.eligibility.value = "";
-    const res = await fetch("/api/posts", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    if (res.ok) {
-      setMsg("Posted!");
-      setTimeout(() => setMsg(null), 5000);
+    if (edit == true) {
+      const res = await fetch("/api/posts", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      if (res.ok) {
+        setMsg("Edited!");
+        setTimeout(() => setMsg(null), 3000);
+        async function routing() {
+          await route.replace(`/user/${user._id}`);
+        }
+        routing();
+      }
+    } else {
+      const res = await fetch("/api/posts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: string_body,
+      });
+      if (res.ok) {
+        setMsg("Posted!");
+        setTimeout(() => setMsg(null), 3000);
+      }
     }
   }
 
@@ -85,6 +107,7 @@ export default function PostEditor() {
                   name="title"
                   id="title"
                   placeholder="Title"
+                  value={post ? post.title : null}
                 />
               </FormGroup>
             </Col>
@@ -101,6 +124,7 @@ export default function PostEditor() {
                   name="description"
                   id="description"
                   placeholder="Description"
+                  value={post ? post.description : null}
                 />
               </FormGroup>
             </Col>
@@ -117,6 +141,7 @@ export default function PostEditor() {
                   name="eligibility"
                   id="eligibility"
                   placeholder="Eligibility"
+                  value={post ? post.eligibility : null}
                 />
               </FormGroup>
             </Col>
