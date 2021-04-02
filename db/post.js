@@ -84,6 +84,7 @@ export async function editPost(
   db,
   { postId, title, description, eligibility, approved, deadline }
 ) {
+  const dead_line = new Date(deadline);
   const { value } = await db.collection("posts").findOneAndUpdate(
     { _id: postId },
     {
@@ -92,7 +93,7 @@ export async function editPost(
         description: description,
         eligibility: eligibility,
         approved: approved === true,
-        deadline: deadline,
+        deadline: dead_line,
       },
     }
   );

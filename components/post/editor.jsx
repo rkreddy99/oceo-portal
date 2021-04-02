@@ -24,6 +24,15 @@ export default function PostEditor({ post }) {
   const [user] = useCurrentUser();
 
   const edit = post ? true : false;
+  const [edit_title, setEditTitle] = post
+    ? useState(post.title)
+    : useState(null);
+  const [edit_description, setEditDescription] = post
+    ? useState(post.description)
+    : useState(null);
+  const [edit_eligibility, setEditEligibility] = post
+    ? useState(post.eligibility)
+    : useState(null);
 
   const [deadline, setdeadline] = useState(null);
 
@@ -71,7 +80,7 @@ export default function PostEditor({ post }) {
       const res = await fetch("/api/posts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: string_body,
+        body: body,
       });
       if (res.ok) {
         setMsg("Posted!");
@@ -107,7 +116,10 @@ export default function PostEditor({ post }) {
                   name="title"
                   id="title"
                   placeholder="Title"
-                  value={post ? post.title : null}
+                  value={post ? edit_title : null}
+                  onChange={(e) => {
+                    setEditTitle(e.target.value);
+                  }}
                 />
               </FormGroup>
             </Col>
@@ -120,11 +132,14 @@ export default function PostEditor({ post }) {
                 </Label>
                 <Input
                   required
-                  type="text"
+                  type="textarea"
                   name="description"
                   id="description"
                   placeholder="Description"
-                  value={post ? post.description : null}
+                  value={post ? edit_description : null}
+                  onChange={(e) => {
+                    setEditDescription(e.target.value);
+                  }}
                 />
               </FormGroup>
             </Col>
@@ -137,11 +152,14 @@ export default function PostEditor({ post }) {
                 </Label>
                 <Input
                   required
-                  type="text"
+                  type="textarea"
                   name="eligibility"
                   id="eligibility"
                   placeholder="Eligibility"
-                  value={post ? post.eligibility : null}
+                  value={post ? edit_eligibility : null}
+                  onChange={(e) => {
+                    setEditEligibility(e.target.value);
+                  }}
                 />
               </FormGroup>
             </Col>
