@@ -91,7 +91,7 @@ export default function PostEditor({ post }) {
 
   return (
     <>
-      <h2>Create an opportunity</h2>
+      {edit ? <h2> Editing {post?.title}</h2> : <h2>Create an opportunity</h2>}
       {msg ? (
         <>
           <br />
