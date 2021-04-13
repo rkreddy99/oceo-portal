@@ -76,6 +76,7 @@ function Post({ post }) {
               padding: 1.5rem;
               margin-bottom: 0.5rem;
               transition: box-shadow 0.2s ease 0s;
+              position: relative;
             }
             div:hover {
               box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
@@ -99,9 +100,23 @@ function Post({ post }) {
               color: red;
               font-weight: 600;
             }
+            #edit-button {
+              float: right;
+            }
           `}
         </style>
         <div>
+          {post?.creatorId == currentUser?._id ? (
+            <editbutton id="edit-button">
+              <Link
+                href={`/edit-post?title=${post?.title}&eligibility=${post?.eligibility}&description=${post?.description}&deadline=${deadline}&id=${post?._id}`}
+              >
+                <Button outline>
+                  <MdEdit />
+                </Button>
+              </Link>
+            </editbutton>
+          ) : null}
           {post?.creatorId == currentUser?._id && post?.approved ? (
             <p id="approved">Approved by admin</p>
           ) : post?.creatorId == currentUser?._id && post?.approved == false ? (
@@ -172,16 +187,7 @@ function Post({ post }) {
           ) : null}
           {post?.creatorId == currentUser?._id && post?.approved ? (
             <Link href={`/post/${post._id}/applicants`}>
-              <Button> View All Aplicants </Button>
-            </Link>
-          ) : null}
-          {post?.creatorId == currentUser?._id ? (
-            <Link
-              href={`/edit-post?title=${post?.title}&eligibility=${post?.eligibility}&description=${post?.description}&deadline=${deadline}&id=${post?._id}`}
-            >
-              <Button>
-                <MdEdit />
-              </Button>
+              <Button> View All Applicants </Button>
             </Link>
           ) : null}
         </div>
