@@ -7,7 +7,7 @@ export default function MyApp({ Component, pageProps }) {
   return (
     <Layout>
       <Head>
-        <title>OCEO Portal, IITGN</title>
+        <title>o-CEO Portal, IITGN</title>
       </Head>
       <Component {...pageProps} />
     </Layout>
