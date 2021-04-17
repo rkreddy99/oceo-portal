@@ -21,13 +21,14 @@ export default function showApplicants({post}) {
     async function handleClick(event){
         // console.log(event.target.getAttribute(" hre fldjs ljdsl jluserid"));
         var formData = new FormData;
-        if(event.target.getAttribute("selected")){
+        if(event.target.getAttribute("rejected")!="true"){
             formData.append("selected", "true");
         }
         else{
             console.log("rejected 1");
             formData.append("rejected", "true");
         }
+
         console.log(event.target.getAttribute("rejected"));
         formData.append("userid", event.target.getAttribute("userid"));
         formData.append("username", event.target.getAttribute("username"));
@@ -65,7 +66,7 @@ export default function showApplicants({post}) {
 
     return (
         <div >
-            {post.applicants.map((applicant)=>!((post.selectedApplicants.includes(applicant.userid))||(!applicant.rejected)) ?
+            {post.applicants.map((applicant)=>!((post.applicants.includes(applicant.userid))) ?
                 (<Card style={{ height: "1fr", backgroundColor: "#E8E8E8"}}>
                     <CardBody>
                     <CardTitle tag="h5">{applicant.name}</CardTitle>
@@ -76,7 +77,7 @@ export default function showApplicants({post}) {
                     <CardText>{applicant.sop}</CardText>
                     <Button style={{backgroundColor:"#5b92e5"}} onClick={handleClick} 
                     userid={applicant.userid} username={applicant.name}
-                    useremail={applicant.email} selected={"true"}
+                    useremail={applicant.email}  
                     >Accept
                     </Button>
                     <Button style={{backgroundColor:"red"}} onClick={handleClick} 
