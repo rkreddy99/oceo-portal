@@ -39,6 +39,7 @@ export async function insertPost(
     title,
     description,
     eligibility,
+    comments,
     approved,
     applicants,
     selectedApplicants,
@@ -53,6 +54,7 @@ export async function insertPost(
       title,
       description,
       eligibility,
+      comments,
       approved,
       applicants,
       selectedApplicants,
@@ -64,6 +66,7 @@ export async function insertPost(
 }
 
 export async function approvePost(db, { postId, approve }) {
+  
   const { value } = await db
     .collection("posts")
     .findOneAndUpdate(
@@ -82,7 +85,7 @@ export async function deletePost(db, { postId, approve }) {
 
 export async function editPost(
   db,
-  { postId, title, description, eligibility, approved, deadline }
+  { postId, title, description, eligibility, comments, approved, deadline }
 ) {
   const dead_line = new Date(deadline);
   const { value } = await db.collection("posts").findOneAndUpdate(
@@ -92,6 +95,7 @@ export async function editPost(
         title: title,
         description: description,
         eligibility: eligibility,
+        comments: comments,
         approved: approved === true,
         deadline: dead_line,
       },

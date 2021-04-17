@@ -53,6 +53,7 @@ handler.post(async (req, res) => {
     title: req.body.title,
     description: req.body.description,
     eligibility: req.body.eligibility,
+    comments: [],
     approved: req.body.approved,
     applicants: [],
     selectedApplicants: [],

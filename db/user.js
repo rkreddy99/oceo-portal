@@ -44,6 +44,18 @@ export async function updateUserPosts(db, userid, postid, userObj) {
     .then(({ value }) => value);
   return updateUserPost;
 }
+export async function updatePostComment(db, postid, comment) {
+
+  const update = await db
+    .collection("posts")
+    .findOneAndUpdate(
+      { _id: postid },
+      { $push: { comments: comment } },
+      { returnOriginal: false }
+    )
+    .then(({ value }) => value);
+  return update;
+}
 export async function updateUserPostsifSelected(db, userid, postid, userObj) {
   console.log(userObj, "inside db index upadateifselect");
   if(userObj.selected){

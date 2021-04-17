@@ -2,7 +2,7 @@ import nc from "next-connect";
 import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
 import { all } from "@/middlewares/index";
-import { updateUserById, updateUserPosts, updateUserPostsifSelected } from "@/db/index";
+import { updateUserById, updateUserPosts, updateUserPostsifSelected, updatePostComment } from "@/db/index";
 import { extractUser } from "@/lib/api-helpers";
 import { sendEmail } from "@/lib/mail";
 const upload = multer({ dest: "/tmp" });
@@ -93,6 +93,14 @@ handler.patch(upload.single("profilePicture"), async (req, res) => {
     // console.log(req.body.email, req.)
     await sendEmail(msg);
     res.json({ user: extractUser(user) });
+  }
+  else if(req.body.comment){
+    const user = await updatePostComment(
+      req.db,
+      req.body.postid,
+      req.body.comment,
+      req.body
+    );
   }
   
   
