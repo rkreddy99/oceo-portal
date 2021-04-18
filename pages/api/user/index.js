@@ -44,17 +44,16 @@ handler.patch(upload.single("profilePicture"), async (req, res) => {
       req.body.userid,
       req.body.postid,
       req.body
-
     );
     res.json({ user: extractUser(user) });
   } 
-  else if(req.body.selected){
+  else if(req.body.selected && req.body.admin){
     const user = await updateUserPostsifSelected(
       req.db,
       req.body.userid,
       req.body.postid,
-      req.body
-
+      req.body,
+      true
     );
     const msg = {
       to: req.body.useremail,
@@ -68,16 +67,41 @@ handler.patch(upload.single("profilePicture"), async (req, res) => {
         `,
     };
     // console.log(req.body.email, req.)
-    await sendEmail(msg);
+    // await sendEmail(msg);
+    sendEmail(msg);
     res.json({ user: extractUser(user) });
   }
-  else if(req.body.rejected){
+  else if(req.body.selected){
     const user = await updateUserPostsifSelected(
       req.db,
       req.body.userid,
       req.body.postid,
-      req.body
-
+      req.body,
+      false
+    );
+    const msg = {
+      to: req.body.useremail,
+      from: process.env.EMAIL_FROM,
+      subject: "oCEO Selection Confirmation Email",
+      html: `
+        <div>
+          <p>Hello, ${req.body.username}</p>
+          <p>We are happy to inform you that you are accepted to work under oCEO job posting: ${req.body.posttitle}.</p>
+        </div>
+        `,
+    };
+    // console.log(req.body.email, req.)
+    // await sendEmail(msg);
+    sendEmail(msg);
+    res.json({ user: extractUser(user) });
+  }
+  else if(req.body.rejected && req.body.admin){
+    const user = await updateUserPostsifSelected(
+      req.db,
+      req.body.userid,
+      req.body.postid,
+      req.body,
+      true
     );
     const msg = {
       to: req.body.useremail,
@@ -91,7 +115,32 @@ handler.patch(upload.single("profilePicture"), async (req, res) => {
         `,
     };
     // console.log(req.body.email, req.)
-    await sendEmail(msg);
+    // await sendEmail(msg);
+    sendEmail(msg);
+    res.json({user: extractUser(user) });
+  }
+  else if(req.body.rejected){
+    const user = await updateUserPostsifSelected(
+      req.db,
+      req.body.userid,
+      req.body.postid,
+      req.body,
+      false
+    );
+    const msg = {
+      to: req.body.useremail,
+      from: process.env.EMAIL_FROM,
+      subject: "oCEO Opportunity Status Update",
+      html: `
+        <div>
+          <p>Hello, ${req.body.username}</p>
+          <p>We are sorry to inform you that your application for working on oCEO job posting: ${req.body.posttitle} is rejected.</p>
+        </div>
+        `,
+    };
+    // console.log(req.body.email, req.)
+    // await sendEmail(msg);
+    sendEmail(msg);
     res.json({ user: extractUser(user) });
   }
   else if(req.body.comment){

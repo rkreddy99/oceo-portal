@@ -251,7 +251,7 @@ function Post({ post }) {
               </Modal>
             </>
           ) : null}
-          {post?.creatorId == currentUser?._id && post?.approved ? (
+          {((post?.creatorId == currentUser?._id || currentUser?.role=="admin") && post?.approved) ? (
             <div>
             <Link href={`/post/${post._id}/applicants`}>
               <Button style={{backgroundColor: "blue",
