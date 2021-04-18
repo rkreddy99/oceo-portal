@@ -47,8 +47,8 @@ handler.patch(upload.single("profilePicture"), async (req, res) => {
     res.json({ user: extractUser(user) });
   } 
   else if(req.body.selected && req.body.admin=="true"){
-    console.log("Admin idhar");
-    console.log(req.body.admin);
+    // console.log("Admin idhar");
+    // console.log(req.body.admin);
     const user = await updateUserPostsifSelected(
       req.db,
       req.body.userid,
@@ -73,7 +73,7 @@ handler.patch(upload.single("profilePicture"), async (req, res) => {
     res.json({ user: extractUser(user) });
   }
   else if(req.body.selected){
-    console.log("Prof idhar");
+    // console.log("Prof idhar");
 
     const user = await updateUserPostsifSelected(
       req.db,

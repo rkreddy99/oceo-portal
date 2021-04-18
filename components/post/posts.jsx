@@ -342,8 +342,8 @@ export default function Posts({ creatorId, approved, deadlineDate, viewApp }) {
     va = viewApp;
   }
   // console.log(viewApp);
-  console.log("here");
-  console.log(va);
+  // console.log("here");
+  // console.log(va);
   return (
     <div>
       {posts.map((post) => (

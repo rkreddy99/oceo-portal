@@ -58,10 +58,10 @@ export async function updatePostComment(db, postid, comment) {
 }
 export async function updateUserPostsifSelected(db, userid, postid, userObj, isAdmin) {
   // console.log(userObj, "inside db index upadateifselect");
-  console.log(isAdmin);
+  // console.log(isAdmin);
   if(userObj.selected){
       if (!isAdmin){
-        console.log("Prof");
+        // console.log("Prof");
         const updatePostApplicants = await db
         .collection("posts")
         .findOneAndUpdate(
@@ -71,7 +71,7 @@ export async function updateUserPostsifSelected(db, userid, postid, userObj, isA
         )
         .then(({ value }) => value);
       } else {
-        console.log("Admin");
+        // console.log("Admin");
         const updateUserPost = await db
         .collection("users")
         .findOneAndUpdate(
