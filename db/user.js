@@ -56,36 +56,44 @@ export async function updatePostComment(db, postid, comment) {
     .then(({ value }) => value);
   return update;
 }
-export async function updateUserPostsifSelected(db, userid, postid, userObj) {
+export async function updateUserPostsifSelected(db, userid, postid, userObj, isAdmin) {
   console.log(userObj, "inside db index upadateifselect");
   if(userObj.selected){
-      const updateUserPost = await db
-      .collection("users")
-      .findOneAndUpdate(
-        { _id: userid },
-        { $push: { selectedPosts: postid } },
-        { returnOriginal: false }
-      )
-      .then(({ value }) => value);
-    const updatePostApplicants = await db
-      .collection("posts")
-      .findOneAndUpdate(
-        { _id: postid },
-        { $push: { selectedApplicants: userid } },
-        { returnOriginal: false }
-      )
-      .then(({ value }) => value);
+      if (!isAdmin){
+        const updateUserPost = await db
+        .collection("users")
+        .findOneAndUpdate(
+          { _id: userid },
+          { $push: { selectedPosts: postid } },
+          { returnOriginal: false }
+        )
+        .then(({ value }) => value);
+        const updatePostApplicants = await db
+        .collection("posts")
+        .findOneAndUpdate(
+          { _id: postid },
+          { $push: { selectedApplicants: userid } },
+          { returnOriginal: false }
+        )
+        .then(({ value }) => value);
+      } else {
+        
+      }
   }
   else{
-    const updatePostApplicants = await db
-      .collection("posts")
-      .findOneAndUpdate(
-        { _id: postid },
-        { $pull: {applicants: {userid: userid}} } ,
-        { returnOriginal: false },
-        {multi: true}
-      )
-      .then(({ value }) => value);    
+    if (!isAdmin){
+      const updatePostApplicants = await db
+        .collection("posts")
+        .findOneAndUpdate(
+          { _id: postid },
+          { $pull: {applicants: {userid: userid}} } ,
+          { returnOriginal: false },
+          {multi: true}
+        )
+        .then(({ value }) => value);  
+    } else {
+
+    }  
   }
   
   return updateUserPostsifSelected;
