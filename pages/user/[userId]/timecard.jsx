@@ -58,7 +58,7 @@ const TimeCardDisplay = ({ timecard, admin }) => {
   if (admin){
     return (
       <>
-      <Col md={6}>
+      <Col md={6} style={{ marginTop: "1em" }}>
         <Card>
           <CardBody>
             <Form>
@@ -190,7 +190,6 @@ const TimeCardDisplay = ({ timecard, admin }) => {
                   </FormGroup>
                 </Col>
               </Row>
-              <Button>Approve</Button>
             </Form>
           </CardBody>
         </Card>

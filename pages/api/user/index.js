@@ -28,11 +28,10 @@ handler.get(async (req, res) => {
   if (!req.user) return res.json({ user: null });
   const { password, ...u } = req.user;
   // console.log("in api get", u);
-  res.json({ user: u });
+  return res.json({ user: u });
 });
 
 handler.patch(upload.single("profilePicture"), async (req, res) => {
-  console.log("hello");
   if (!req.user) {
     req.status(401).end();
     return;
@@ -47,7 +46,9 @@ handler.patch(upload.single("profilePicture"), async (req, res) => {
     );
     res.json({ user: extractUser(user) });
   } 
-  else if(req.body.selected && req.body.admin){
+  else if(req.body.selected && req.body.admin=="true"){
+    console.log("Admin idhar");
+    console.log(req.body.admin);
     const user = await updateUserPostsifSelected(
       req.db,
       req.body.userid,
@@ -72,6 +73,8 @@ handler.patch(upload.single("profilePicture"), async (req, res) => {
     res.json({ user: extractUser(user) });
   }
   else if(req.body.selected){
+    console.log("Prof idhar");
+
     const user = await updateUserPostsifSelected(
       req.db,
       req.body.userid,
@@ -95,7 +98,7 @@ handler.patch(upload.single("profilePicture"), async (req, res) => {
     sendEmail(msg);
     res.json({ user: extractUser(user) });
   }
-  else if(req.body.rejected && req.body.admin){
+  else if(req.body.rejected && req.body.admin=="true"){
     const user = await updateUserPostsifSelected(
       req.db,
       req.body.userid,

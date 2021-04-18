@@ -56,6 +56,7 @@ handler.post(async (req, res) => {
     comments: [],
     approved: req.body.approved,
     applicants: [],
+    profselectedApplicants: [],
     selectedApplicants: [],
     creatorId: req.user._id,
     deadline: req.body.deadline,

@@ -13,11 +13,10 @@ import Link from "next/link";
 import { useCurrentUser } from "@/hooks/index";
 
 
-export default function showApplicants({post}) {
-    const [currentUser, { mutate }] = useCurrentUser();
+export default function showApplicants({currentUser, post}) {
+    const [cu, { mutate }] = useCurrentUser();
     if(currentUser?.role=="admin"){
-        const [applicants, setApplicants] = useState(post.recommendedApplicants);
-
+        const [applicants, setApplicants] = useState(post.profselectedApplicants);
     } else {
         const [applicants, setApplicants] = useState(post.applicants);
     }
@@ -113,11 +112,10 @@ export default function showApplicants({post}) {
         alert(`mail id of applicant is ${event.target.getAttribute("useremail")}`)
         
     }
-
     if (currentUser?.role=="admin") {
         return (
             <div >
-                {post.applicants.map((applicant)=>!((post.applicants.includes(applicant.userid))) ?
+                {post.applicants.map((applicant)=>((post.profselectedApplicants.includes(applicant.userid))) ?
                     (<Card style={{ height: "1fr", backgroundColor: "#E8E8E8"}}>
                         <CardBody>
                         <CardTitle tag="h5">{applicant.name}</CardTitle>
@@ -145,7 +143,7 @@ export default function showApplicants({post}) {
     } else {
         return (
             <div >
-                {post.applicants.map((applicant)=>!((post.applicants.includes(applicant.userid))) ?
+                {post.applicants.map((applicant)=>!((post.profselectedApplicants.includes(applicant.userid))) ?
                     (<Card style={{ height: "1fr", backgroundColor: "#E8E8E8"}}>
                         <CardBody>
                         <CardTitle tag="h5">{applicant.name}</CardTitle>
@@ -176,10 +174,12 @@ export default function showApplicants({post}) {
 
 export async function getServerSideProps(context) {
     await all.run(context.req, context.res);
-    
-    var post = await findPostById(context.req.db, context.params.postId)
-    post = JSON.parse(post)
+    const currentUser = context.req.user;
+    console.log(currentUser);
+    if (!currentUser) context.res.statusCode = 404;
+    var post = await findPostById(context.req.db, context.params.postId);
+    post = JSON.parse(post);
     return {
-      props: {post}, 
+      props: {currentUser,post}, 
     }
   }
