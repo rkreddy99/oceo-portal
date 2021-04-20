@@ -7,7 +7,7 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Label,Input, Form, 
 import { defaultProfilePicture } from "@/lib/default";
 import { useCurrentUser } from "@/hooks/index";
 import { MdEdit } from "react-icons/md";
-function Post({ post }) {
+function Post({ post, va }) {
   const [currentUser, { mutate }] = useCurrentUser();
   const [isUpdating, setIsUpdating] = useState(false);
   const [msg, setMsg] = useState(null);
@@ -204,7 +204,7 @@ function Post({ post }) {
               </Link>
             )
           ) : null}
-          {currentUser?.role == "admin" ? (
+          {(currentUser?.role == "admin" && !va) ? (
             <>
               <Button type="button" onClick={() => approve(true, post)} style={{backgroundColor: "blue",
                marginRight: 10}}>
@@ -319,7 +319,7 @@ export function usePostPages({ creatorId, approved, deadlineDate } = {}) {
   );
 }
 
-export default function Posts({ creatorId, approved, deadlineDate }) {
+export default function Posts({ creatorId, approved, deadlineDate, viewApp }) {
   const { data, error, size, setSize } = usePostPages({
     creatorId,
     approved,
@@ -335,11 +335,19 @@ export default function Posts({ creatorId, approved, deadlineDate }) {
   const isEmpty = data?.[0].posts?.length === 0;
   const isReachingEnd =
     isEmpty || (data && data[data.length - 1]?.posts.length < PAGE_SIZE);
-
+  var va = false;
+  if(typeof viewApp=== "undefined"){
+    va = false;
+  } else {
+    va = viewApp;
+  }
+  // console.log(viewApp);
+  // console.log("here");
+  // console.log(va);
   return (
     <div>
       {posts.map((post) => (
-        <Post key={post._id} post={post} />
+        <Post va={va} key={post._id} post={post} />
       ))}
       {!isReachingEnd && (
         <button
@@ -362,7 +370,7 @@ export const Applications = ({ post }) => {
   if (post != null) {
     return (
       <div>
-        <Post post={post} />
+        <Post va={false} post={post} />
       </div>
     );
   } else {
