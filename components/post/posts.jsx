@@ -3,15 +3,16 @@ import { useSWRInfinite } from "swr";
 import Link from "next/link";
 import { useUser } from "@/hooks/index";
 import fetcher from "@/lib/fetch";
-import { Button } from "reactstrap";
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Label,Input, Form, FormGroup } from "reactstrap";
 import { defaultProfilePicture } from "@/lib/default";
 import { useCurrentUser } from "@/hooks/index";
 import { MdEdit } from "react-icons/md";
-
-function Post({ post }) {
+function Post({ post, va }) {
   const [currentUser, { mutate }] = useCurrentUser();
   const [isUpdating, setIsUpdating] = useState(false);
   const [msg, setMsg] = useState(null);
+  const [showCommentModal, setShowCommentModal] = useState(false);
+  const [showCommentHistoryModal, setShowCommentHistoryModal] = useState(false);
 
   var [hide, setHide] = useState(false);
 
@@ -38,7 +39,35 @@ function Post({ post }) {
     }
     setIsUpdating(false);
   }
-
+  async function handleComment(event) {
+  
+    event.preventDefault();
+    console.log(event.currentTarget)
+    setShowCommentModal(false)
+    alert(event.currentTarget.comment.value);
+  //
+  const formdata = new FormData();
+  formdata.append("postid", post._id);
+  formdata.append("comment", event.currentTarget.comment.value);
+  const res = await fetch("/api/user", {
+    method: "PATCH",
+    body: formdata,
+  });
+  if (res.status === 200) {
+    // const userData = await res.json();
+    // mutate({
+    //   user: {
+    //     ...user,
+    //     ...userData.user,
+    //   },
+    // });
+    // setMsg({ message: "Applied" });
+  } else {
+    setMsg({ message: await res.text(), isError: true });
+  }
+  setIsUpdating(false);
+  }
+  
   async function approve(bool) {
     const body = JSON.stringify({
       postId: post._id,
@@ -175,20 +204,79 @@ function Post({ post }) {
               </Link>
             )
           ) : null}
-          {currentUser?.role == "admin" ? (
+          {(currentUser?.role == "admin" && !va) ? (
             <>
-              <Button type="button" onClick={() => approve(true, post)}>
+              <Button type="button" onClick={() => approve(true, post)} style={{backgroundColor: "blue",
+               marginRight: 10}}>
                 Approve
               </Button>
-              <Button type="button" onClick={() => approve(false, post)}>
+              <Button type="button" onClick={() => approve(false, post)} style={{backgroundColor: "red",
+               marginRight: 10}}>
                 Delete
               </Button>
+              <Button type="button" onClick={() => setShowCommentModal(true)} style={{backgroundColor: "orange",
+               marginRight: 10}}>
+                Add Comment
+              </Button >
+              <Button type="button" onClick={() => setShowCommentHistoryModal(true)} style={{backgroundColor: "green",
+               marginRight: 10}}>
+                All Admin Comments
+                </Button>
+              <Modal isOpen={showCommentModal} >
+              <Form onSubmit={handleComment}>
+                <ModalHeader >Add Comment</ModalHeader>
+                <ModalBody>
+                  
+                    <FormGroup>
+                      <Label>Type Comment Here</Label>
+                      <Input name="comment"></Input>                  
+                    </FormGroup>
+                  
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="primary" type="submit">Submit</Button>
+                  <Button color="secondary" onClick={()=>setShowCommentModal(false)}>Cancel</Button>
+                </ModalFooter>
+                </Form>
+              </Modal>
+              <Modal isOpen={showCommentHistoryModal} >
+                <ModalHeader >{post.title}</ModalHeader>
+                <ModalBody>
+                  {post.comments.map((comment)=><p>{comment}</p>)}
+                  
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="secondary" onClick={()=>setShowCommentHistoryModal(false)}>Close</Button>
+                </ModalFooter>
+              </Modal>
             </>
           ) : null}
-          {post?.creatorId == currentUser?._id && post?.approved ? (
+          {((post?.creatorId == currentUser?._id || currentUser?.role=="admin") && post?.approved) ? (
+            <div>
             <Link href={`/post/${post._id}/applicants`}>
-              <Button> View All Applicants </Button>
+              <Button style={{backgroundColor: "blue",
+            marginRight: 10}}> View All Applicants </Button>
             </Link>
+          
+            </div>
+          ) : null}
+          {post?.creatorId == currentUser?._id && !post?.approved ? (
+            <div>
+            <Button type="button" onClick={() => setShowCommentHistoryModal(true)} style={{backgroundColor: "green",
+            marginRight: 10}}>
+             Comments from Admin
+         </Button>
+           <Modal isOpen={showCommentHistoryModal} >
+           <ModalHeader >{post?.title}</ModalHeader>
+           <ModalBody>
+             {post.comments? Array(post.comments).map((comment)=>{return (<p>{`${comment} \n`}</p>)}) : "no available comments"}
+             
+           </ModalBody>
+           <ModalFooter>
+             <Button color="secondary" onClick={()=>setShowCommentHistoryModal(false)}>Close</Button>
+           </ModalFooter>
+         </Modal>
+         </div>
           ) : null}
         </div>
       </>
@@ -231,7 +319,7 @@ export function usePostPages({ creatorId, approved, deadlineDate } = {}) {
   );
 }
 
-export default function Posts({ creatorId, approved, deadlineDate }) {
+export default function Posts({ creatorId, approved, deadlineDate, viewApp }) {
   const { data, error, size, setSize } = usePostPages({
     creatorId,
     approved,
@@ -247,11 +335,19 @@ export default function Posts({ creatorId, approved, deadlineDate }) {
   const isEmpty = data?.[0].posts?.length === 0;
   const isReachingEnd =
     isEmpty || (data && data[data.length - 1]?.posts.length < PAGE_SIZE);
-
+  var va = false;
+  if(typeof viewApp=== "undefined"){
+    va = false;
+  } else {
+    va = viewApp;
+  }
+  // console.log(viewApp);
+  // console.log("here");
+  // console.log(va);
   return (
     <div>
       {posts.map((post) => (
-        <Post key={post._id} post={post} />
+        <Post va={va} key={post._id} post={post} />
       ))}
       {!isReachingEnd && (
         <button
@@ -274,7 +370,7 @@ export const Applications = ({ post }) => {
   if (post != null) {
     return (
       <div>
-        <Post post={post} />
+        <Post va={false} post={post} />
       </div>
     );
   } else {

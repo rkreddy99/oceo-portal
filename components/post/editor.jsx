@@ -53,6 +53,7 @@ export default function PostEditor({ post }) {
       title: e.currentTarget.title.value,
       description: e.currentTarget.description.value,
       eligibility: e.currentTarget.eligibility.value,
+      comments: post?.comments,
       approved: false,
       deadline: deadline,
     });

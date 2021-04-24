@@ -44,36 +44,83 @@ export async function updateUserPosts(db, userid, postid, userObj) {
     .then(({ value }) => value);
   return updateUserPost;
 }
-export async function updateUserPostsifSelected(db, userid, postid, userObj) {
-  console.log(userObj, "inside db index upadateifselect");
+export async function updatePostComment(db, postid, comment) {
+
+  const update = await db
+    .collection("posts")
+    .findOneAndUpdate(
+      { _id: postid },
+      { $push: { comments: comment } },
+      { returnOriginal: false }
+    )
+    .then(({ value }) => value);
+  return update;
+}
+export async function updateUserPostsifSelected(db, userid, postid, userObj, isAdmin) {
+  // console.log(userObj, "inside db index upadateifselect");
+  // console.log(isAdmin);
   if(userObj.selected){
-      const updateUserPost = await db
-      .collection("users")
-      .findOneAndUpdate(
-        { _id: userid },
-        { $push: { selectedPosts: postid } },
-        { returnOriginal: false }
-      )
-      .then(({ value }) => value);
-    const updatePostApplicants = await db
-      .collection("posts")
-      .findOneAndUpdate(
-        { _id: postid },
-        { $push: { selectedApplicants: userid } },
-        { returnOriginal: false }
-      )
-      .then(({ value }) => value);
+      if (!isAdmin){
+        // console.log("Prof");
+        const updatePostApplicants = await db
+        .collection("posts")
+        .findOneAndUpdate(
+          { _id: postid },
+          { $push: { profselectedApplicants: userid } },
+          { returnOriginal: false }
+        )
+        .then(({ value }) => value);
+      } else {
+        // console.log("Admin");
+        const updateUserPost = await db
+        .collection("users")
+        .findOneAndUpdate(
+          { _id: userid },
+          { $push: { selectedPosts: postid } },
+          { returnOriginal: false }
+        )
+        .then(({ value }) => value);
+        const updatePostApplicants = await db
+        .collection("posts")
+        .findOneAndUpdate(
+          { _id: postid },
+          { $push: { selectedApplicants: userid } },
+          { returnOriginal: false }
+        )
+        .then(({ value }) => value);
+      }
   }
   else{
-    const updatePostApplicants = await db
-      .collection("posts")
-      .findOneAndUpdate(
-        { _id: postid },
-        { $pull: {applicants: {userid: userid}} } ,
-        { returnOriginal: false },
-        {multi: true}
-      )
-      .then(({ value }) => value);    
+    if (!isAdmin){
+      const updatePostApplicants = await db
+        .collection("posts")
+        .findOneAndUpdate(
+          { _id: postid },
+          { $pull: {applicants: {userid: userid}} } ,
+          { returnOriginal: false },
+          {multi: true}
+        )
+        .then(({ value }) => value);
+    } else {
+      const updatePostApplicants = await db
+        .collection("posts")
+        .findOneAndUpdate(
+          { _id: postid },
+          { $pull: {applicants: {userid: userid}} } ,
+          { returnOriginal: false },
+          {multi: true}
+        )
+        .then(({ value }) => value);
+      const updatePostApplicants2 = await db
+        .collection("posts")
+        .findOneAndUpdate(
+          { _id: postid },
+          { $pull: {profselectedApplicants: {userid: userid}} } ,
+          { returnOriginal: false},
+          {multi: true}
+        )
+        .then(({ value }) => value);  
+    }  
   }
   
   return updateUserPostsifSelected;

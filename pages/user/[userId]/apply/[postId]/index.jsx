@@ -51,10 +51,13 @@ export default function apply(props) {
                 },
               });
             console.log("submitted successfully!")
+            window.location.replace("/home");
         }
         else{
-            console.log("failed application contact admin.")
+            alert("failed application contact admin.")
         }
+        
+        
         
         
         
@@ -69,13 +72,13 @@ export default function apply(props) {
                 <Col md={6}>
                 <FormGroup>
                     <Label for="exampleText">Full Name</Label>
-                    <Input type="text" value={`${props.user.name}`} name="name"/>
+                    <Input type="text" value={`${props.user.name}`} name="name" required="true"/>
                 </FormGroup>
                 </Col>
                 <Col md={6}>
                 <FormGroup>
                     <Label for="exampleEmail">Email</Label>
-                    <Input type="email" name="email" id="exampleEmail" value={props.user.email} />
+                    <Input type="email" name="email" id="exampleEmail" value={props.user.email} required="true"/>
                 </FormGroup>
                 </Col>
             </Row>
@@ -83,7 +86,7 @@ export default function apply(props) {
                 <Col md={4}>
                     <FormGroup>
                     <Label>Graduating year</Label>
-                    <select name = "graduatingYear">
+                    <select name = "graduatingYear" required="true" >
                         {yearList.map((year)=><option value={year}>{year}</option>)}
                     </select>
                     </FormGroup>
@@ -91,7 +94,7 @@ export default function apply(props) {
                 <Col md={4}>
                     <FormGroup>
                     <Label>Programme</Label>
-                    <select name = "programme">
+                    <select name = "programme" required="true">
                         {programmeList.map((year)=><option value={year}>{year}</option>)}
                     </select>
                     </FormGroup>
@@ -99,7 +102,7 @@ export default function apply(props) {
                 <Col md={4}>
                     <FormGroup>
                     <Label>Stream</Label>
-                    <select name = "stream">
+                    <select name = "stream" required="true">
                         {streamList.map((year)=><option value={year}>{year}</option>)}
                     </select>
                     </FormGroup>
@@ -107,24 +110,24 @@ export default function apply(props) {
             </Row>
             <FormGroup>
                     <Label for="exampleText">SOP</Label>
-                    <Input type="textarea" name="sop"/>
+                    <Input type="textarea" name="sop" required="true"/>
                 </FormGroup>
                     
             <Row>
             <Col md = {6}>
             <FormGroup>
                 <Label for="exampleFile">Resume</Label>
-                <Input type="file" name="resume" id="exampleFile" />
+                <Input type="file" name="resume" id="exampleFile" required="true"/>
             </FormGroup>
             </Col>
             <Col md = {6}>
             <FormGroup>
                 <Label for="exampleFile">CPI</Label>
-                <Input type="text" name="cpi" id="exampleFile" />
+                <Input type="text" name="cpi" id="exampleFile" required="true"/>
             </FormGroup>
             </Col>
             </Row>
-            {/* <Link href={`/user/${props.user._id}`}> */}
+            {/* <Link href={`/home`}> */}
             <Button>Submit</Button>
             {/* </Link> */}
             </Form>

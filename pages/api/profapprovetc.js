@@ -8,7 +8,7 @@ handler.use(all);
 
 handler.post(async (req, res) => {
     const { timecardId } = req.body;
-    console.log(req.body);
+    // console.log(req.body);
     if (!timecardId) {
       res.status(400).send("Incorrect API call");
       return;
