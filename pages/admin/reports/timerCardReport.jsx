@@ -6,27 +6,25 @@ import {
   DropdownItem,
   Button,
 } from "reactstrap";
+import { all } from "@/middlewares/index";
+import { getStudents } from "@/db/index";
 
-function TimeCardReport() {
-  const csvData = [
-    ["firstname", "lastname", "email"],
-    ["John", "Doe", "john.doe@xyz.com"],
-    ["Jane", "Doe", "jane.doe@xyz.com"],
-  ];
+function TimeCardReport({ allstudents, idToEmail }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [month, setMonth] = useState(null);
 
-  console.log(month);
-
   const toggle = () => setDropdownOpen((prevState) => !prevState);
 
-  async function download_csv_file() {
+  const download_csv_file = async () => {
+    console.log(idToEmail, "here");
     const res = await fetch(`/api/timecard?month=${month}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
     const posts_data = {};
-    const users_data = {};
+    const students_data = {};
+    const prof_data = {};
+    const stdnt_tmcrd_not = [];
     const { approvedtimecards } = await res.json();
 
     const timeCardReport = [
@@ -59,22 +57,25 @@ function TimeCardReport() {
         posts_data[post_id] = JSON.parse(post).title;
       }
 
-      if (!users_data[student_id]) {
-        const student = await fetch(`/api/users/${student_id}`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
-        const { user } = await student.json();
-        users_data[student_id] = [user.name, user.email];
+      if (!students_data[student_id]) {
+        console.log(idToEmail);
+        console.log(idToEmail[student_id]);
+        students_data[student_id] = [
+          idToEmail[student_id][0],
+          idToEmail[student_id][1],
+          1,
+        ];
+      } else {
+        students_data[student_id][2] += 1;
       }
 
-      if (!users_data[prof_id]) {
+      if (!prof_data[prof_id]) {
         const prof = await fetch(`/api/users/${prof_id}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
         const { user } = await prof.json();
-        users_data[prof_id] = [user.name];
+        prof_data[prof_id] = [user.name];
       }
 
       const total_hours =
@@ -89,11 +90,11 @@ function TimeCardReport() {
       const totalAmount = rateApproved * total_hours;
 
       timeCardReport.push([
-        users_data[student_id][1],
-        users_data[student_id][0],
+        students_data[student_id][1],
+        students_data[student_id][0],
         posts_data[post_id],
         approvedtimecards[i].month,
-        users_data[prof_id][0],
+        prof_data[prof_id][0],
         total_hours,
         rateApproved,
         totalAmount,
@@ -103,28 +104,30 @@ function TimeCardReport() {
       ]);
     }
 
-    console.log(timeCardReport);
+    for (const [key, value] of Object.entries(students_data)) {
+      if (value[2] < idToEmail[key][2]) {
+        stdnt_tmcrd_not[key] = [value[0], value[1]];
+        console.log("not submitted time card");
+      }
+    }
 
     var csv = "";
     timeCardReport.forEach(function (row) {
       csv += row.join(",");
       csv += "\n";
     });
-    // //display the created CSV data on the web browser
-    document.write(csv);
+
     var hiddenElement = document.createElement("a");
     hiddenElement.href = "data:text/csv;charset=utf-8," + encodeURI(csv);
     hiddenElement.target = "_blank";
-    //provide the name for the CSV file to be downloaded
     hiddenElement.download = `Time Card Report for ${month}.csv`;
     hiddenElement.click();
-    window.location.reload();
-  }
+  };
 
   // console.log(timeCardReport);
 
   return (
-    <>
+    <div id="createreport">
       <Dropdown isOpen={dropdownOpen} toggle={toggle}>
         <DropdownToggle caret>
           {month ? month : "Select the month"}
@@ -161,7 +164,23 @@ function TimeCardReport() {
       <Button onClick={download_csv_file} color="info">
         Download Time Card Report
       </Button>
-    </>
+    </div>
   );
 }
 export default TimeCardReport;
+
+export async function getServerSideProps(context) {
+  await all.run(context.req, context.res);
+  const allstudents = await getStudents(context.req.db);
+  const idToEmail = {};
+  allstudents.forEach((student) => {
+    if (student) {
+      idToEmail[student._id] = [
+        student.name,
+        student.email,
+        student.selectedPosts.length,
+      ];
+    }
+  });
+  return { props: { allstudents, idToEmail } };
+}
