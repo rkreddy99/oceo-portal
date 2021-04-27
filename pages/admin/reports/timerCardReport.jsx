@@ -5,18 +5,28 @@ import {
   DropdownMenu,
   DropdownItem,
   Button,
+  Alert,
+  Col,
 } from "reactstrap";
 import { all } from "@/middlewares/index";
 import { getStudents } from "@/db/index";
 
-function TimeCardReport({ allstudents, idToEmail }) {
+function TimeCardReport({ allstudents, idToEmail, postToUser }) {
+  const postUserMap = JSON.parse(postToUser);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [month, setMonth] = useState(null);
+  const [msg, setMsg] = useState(null);
+  const [color, setColor] = useState(null);
 
   const toggle = () => setDropdownOpen((prevState) => !prevState);
 
   const download_csv_file = async () => {
-    console.log(idToEmail, "here");
+    if (!month) {
+      setColor("danger");
+      setMsg("Please select a month");
+      setTimeout(() => setMsg(null), 2000);
+      return;
+    }
     const res = await fetch(`/api/timecard?month=${month}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
@@ -24,7 +34,6 @@ function TimeCardReport({ allstudents, idToEmail }) {
     const posts_data = {};
     const students_data = {};
     const prof_data = {};
-    const stdnt_tmcrd_not = [];
     const { approvedtimecards } = await res.json();
 
     const timeCardReport = [
@@ -40,6 +49,8 @@ function TimeCardReport({ allstudents, idToEmail }) {
         "bank name".toUpperCase(),
         "bank account number".toUpperCase(),
         "bank ifsc".toUpperCase(),
+        "ADVISOR APPROVED",
+        "ADMIN APPROVED",
       ],
     ];
 
@@ -58,8 +69,6 @@ function TimeCardReport({ allstudents, idToEmail }) {
       }
 
       if (!students_data[student_id]) {
-        console.log(idToEmail);
-        console.log(idToEmail[student_id]);
         students_data[student_id] = [
           idToEmail[student_id][0],
           idToEmail[student_id][1],
@@ -99,16 +108,11 @@ function TimeCardReport({ allstudents, idToEmail }) {
         rateApproved,
         totalAmount,
         approvedtimecards[i].bankname,
-        parseInt(approvedtimecards[i].accnum),
+        approvedtimecards[i].accnum,
         approvedtimecards[i].ifsc,
+        approvedtimecards[i].approvedByProf ? "TRUE" : "FALSE",
+        approvedtimecards[i].approvedByAdmin ? "TRUE" : "FALSE",
       ]);
-    }
-
-    for (const [key, value] of Object.entries(students_data)) {
-      if (value[2] < idToEmail[key][2]) {
-        stdnt_tmcrd_not[key] = [value[0], value[1]];
-        console.log("not submitted time card");
-      }
     }
 
     var csv = "";
@@ -124,10 +128,95 @@ function TimeCardReport({ allstudents, idToEmail }) {
     hiddenElement.click();
   };
 
-  // console.log(timeCardReport);
+  const notSubmittedTmcrd = async () => {
+    if (!month) {
+      setColor("danger");
+      setMsg("Please select a month");
+      setTimeout(() => setMsg(null), 2000);
+      return;
+    }
+    const res = await fetch(`/api/timecard?month=${month}`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+    const postStudentTmcrd = {};
+    const notsubmittedTmcrdIds = new Set();
+    const notsubmittedTmcrdEmail = [];
+    const { approvedtimecards } = await res.json();
+
+    for (let i = 0; i < approvedtimecards.length; i++) {
+      let post_id = approvedtimecards[i]?.postId;
+      let student_id = approvedtimecards[i]?.userId;
+      if (postStudentTmcrd[post_id]) {
+        postStudentTmcrd[post_id].push(student_id);
+      } else {
+        postStudentTmcrd[post_id] = [student_id];
+      }
+    }
+
+    for (let i in postUserMap) {
+      if (i in postStudentTmcrd) {
+        let students = postUserMap[i].filter(
+          (x) => !postStudentTmcrd[i].includes(x)
+        );
+        students.forEach((item) => notsubmittedTmcrdIds.add(item));
+      } else {
+        postUserMap[i].forEach((item) => notsubmittedTmcrdIds.add(item));
+      }
+    }
+    const notsubmittedTmcrdIdsarr = Array.from(notsubmittedTmcrdIds);
+
+    notsubmittedTmcrdIdsarr.forEach((item) =>
+      notsubmittedTmcrdEmail.push(idToEmail[item][1])
+    );
+
+    if (!notsubmittedTmcrdEmail.length) {
+      setColor("success");
+      setMsg(`Everybody has submitted timecard for ${month}`);
+      setTimeout(() => setMsg(null), 2000);
+      return;
+    }
+
+    console.log(notsubmittedTmcrdEmail);
+
+    for (let index = 0; index < notsubmittedTmcrdEmail.length; index++) {
+      const res = await fetch(
+        `/api/timecard/notifytmcrd?email=${notsubmittedTmcrdEmail[index]}&month=${month}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      if (res.status === 200) {
+        setColor("success");
+        setMsg("Notified students to submit the timecard");
+        setTimeout(
+          () => setMsg(null),
+          parseInt(2000 / notsubmittedTmcrdEmail.length)
+        );
+      } else {
+        setColor("danger");
+        setMsg(await res.text());
+        setTimeout(
+          () => setMsg(null),
+          parseInt(2000 / notsubmittedTmcrdEmail.length)
+        );
+      }
+    }
+  };
 
   return (
     <div id="createreport">
+      {msg ? (
+        <>
+          <br />
+          <Col sm="12" md={{ size: 6, offset: 3 }}>
+            <Alert color={color}>{msg}</Alert>
+          </Col>
+          <br />
+        </>
+      ) : null}
       <Dropdown isOpen={dropdownOpen} toggle={toggle}>
         <DropdownToggle caret>
           {month ? month : "Select the month"}
@@ -160,9 +249,13 @@ function TimeCardReport({ allstudents, idToEmail }) {
         </DropdownMenu>
       </Dropdown>
       <br />
-      <br />
       <Button onClick={download_csv_file} color="info">
         Download Time Card Report
+      </Button>
+      <br />
+      <br />
+      <Button onClick={notSubmittedTmcrd} color="danger">
+        Get students who have not submitted timecard
       </Button>
     </div>
   );
@@ -173,14 +266,25 @@ export async function getServerSideProps(context) {
   await all.run(context.req, context.res);
   const allstudents = await getStudents(context.req.db);
   const idToEmail = {};
+  const post2User = {};
   allstudents.forEach((student) => {
     if (student) {
-      idToEmail[student._id] = [
-        student.name,
-        student.email,
-        student.selectedPosts.length,
-      ];
+      idToEmail[student._id] = [student.name, student.email];
+      const setSelectedPosts = new Set(student.selectedPosts);
+      for (let i of setSelectedPosts) {
+        if (post2User[i]) {
+          post2User[i].add(student._id);
+        } else {
+          post2User[i] = new Set().add(student._id);
+        }
+      }
     }
   });
-  return { props: { allstudents, idToEmail } };
+
+  for (let i in post2User) {
+    post2User[i] = Array.from(post2User[i]);
+  }
+  const postToUser = JSON.stringify(post2User);
+
+  return { props: { allstudents, idToEmail, postToUser } };
 }
