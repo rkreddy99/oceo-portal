@@ -73,9 +73,6 @@ export async function profApproveTimecard(db, { timecardId }) {
     .then(({ value }) => value);
 }
 
-export async function getApprovedTimeCards(db, month) {
-  return db
-    .collection("timecards")
-    .find({ approvedByAdmin: true, approvedByProf: true, month: month })
-    .toArray();
+export async function getMonthlyTimeCards(db, month) {
+  return db.collection("timecards").find({ month: month }).toArray();
 }
