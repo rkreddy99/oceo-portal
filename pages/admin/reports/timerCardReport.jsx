@@ -26,6 +26,9 @@ function TimeCardReport({ allstudents, idToEmail, postToUser }) {
       setMsg("Please select a month");
       setTimeout(() => setMsg(null), 2000);
       return;
+    } else {
+      setColor("warning");
+      setMsg("Downloading Time Card report...");
     }
     const res = await fetch(`/api/timecard?month=${month}`, {
       method: "GET",
@@ -126,6 +129,10 @@ function TimeCardReport({ allstudents, idToEmail, postToUser }) {
     hiddenElement.target = "_blank";
     hiddenElement.download = `Time Card Report for ${month}.csv`;
     hiddenElement.click();
+
+    setColor("success");
+    setMsg("Downloaded Time Card Report");
+    setTimeout(() => setMsg(null), 1500);
   };
 
   const notSubmittedTmcrd = async () => {
@@ -134,6 +141,9 @@ function TimeCardReport({ allstudents, idToEmail, postToUser }) {
       setMsg("Please select a month");
       setTimeout(() => setMsg(null), 2000);
       return;
+    } else {
+      setColor("warning");
+      setMsg("Notifying students to submit Time Card");
     }
     const res = await fetch(`/api/timecard?month=${month}`, {
       method: "GET",
@@ -179,6 +189,8 @@ function TimeCardReport({ allstudents, idToEmail, postToUser }) {
 
     console.log(notsubmittedTmcrdEmail);
 
+    let sent = false;
+
     for (let index = 0; index < notsubmittedTmcrdEmail.length; index++) {
       const res = await fetch(
         `/api/timecard/notifytmcrd?email=${notsubmittedTmcrdEmail[index]}&month=${month}`,
@@ -189,19 +201,23 @@ function TimeCardReport({ allstudents, idToEmail, postToUser }) {
       );
 
       if (res.status === 200) {
-        setColor("success");
-        setMsg("Notified students to submit the timecard");
-        setTimeout(
-          () => setMsg(null),
-          parseInt(2000 / notsubmittedTmcrdEmail.length)
-        );
+        sent = true;
       } else {
-        setColor("danger");
-        setMsg(await res.text());
-        setTimeout(
-          () => setMsg(null),
-          parseInt(2000 / notsubmittedTmcrdEmail.length)
-        );
+        sent = false;
+      }
+
+      if (index == notsubmittedTmcrdEmail.length - 1) {
+        if (sent) {
+          setColor("success");
+          setMsg(
+            `Email sent to ${notsubmittedTmcrdEmail.length} student(s) to submit Time Card`
+          );
+          setTimeout(() => setMsg(null), 3000);
+        } else {
+          setColor("danger");
+          setMsg(await res.text());
+          setTimeout(() => setMsg(null), 3000);
+        }
       }
     }
   };
@@ -249,13 +265,20 @@ function TimeCardReport({ allstudents, idToEmail, postToUser }) {
         </DropdownMenu>
       </Dropdown>
       <br />
-      <Button onClick={download_csv_file} color="info">
+      <Button
+        onClick={download_csv_file}
+        color="info"
+        style={{ marginRight: "10px" }}
+      >
         Download Time Card Report
       </Button>
-      <br />
-      <br />
-      <Button onClick={notSubmittedTmcrd} color="danger">
-        Get students who have not submitted timecard
+
+      <Button
+        onClick={notSubmittedTmcrd}
+        color="danger"
+        style={{ marginLeft: "10px" }}
+      >
+        Notify Students to submit Time Card
       </Button>
     </div>
   );

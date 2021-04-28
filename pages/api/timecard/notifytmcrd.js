@@ -15,10 +15,10 @@ handler.post(async (req, res) => {
     return;
   }
   const msg = {
-    to: process.env.EMAIL_FROM,
+    to: req.query.email,
     from: process.env.EMAIL_FROM,
     subject: `Time Card Submission`,
-    text: `Dear ${user.name},\nGentle reminder to submit the Time Card of ${req.query.month}`,
+    text: `Dear ${user.name},\n\nGentle reminder to submit the Time Card of ${req.query.month}.`,
   };
   console.log(msg);
   await sendEmail(msg);
