@@ -16,7 +16,7 @@ const IndexPage = () => {
       routing();
     } else if (user?.role == "admin") {
       async function routing() {
-        await route.replace(`/admin`);
+        await route.replace(`/home`); // Changed from /admin
       }
       routing();
     } else {
