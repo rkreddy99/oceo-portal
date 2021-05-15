@@ -206,7 +206,7 @@ function Post({ post, va }) {
               <Link href={`/user/${currentUser?._id}/apply/${post?._id}`}>
                 <Button
                   type="button"
-                  onClick={console.log("button clicked", user)}
+                  // onClick={console.log("button clicked", user)}
                 >
                   {`Application Form`}
                 </Button>
