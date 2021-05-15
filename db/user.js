@@ -140,6 +140,7 @@ export async function insertUser(
     role,
     posts,
     selectedPosts,
+    rollno,
   }
 ) {
   return db
@@ -148,6 +149,7 @@ export async function insertUser(
       _id: nanoid(12),
       emailVerified: false,
       profilePicture,
+      ...(rollno && { rollno: rollno }),
       email,
       password,
       name,

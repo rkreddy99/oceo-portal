@@ -41,6 +41,7 @@ function TimeCardReport({ allstudents, idToEmail, postToUser }) {
 
     const timeCardReport = [
       [
+        "ROLL NO",
         "student email".toUpperCase(),
         "student name".toUpperCase(),
         "activity title".toUpperCase(),
@@ -76,6 +77,7 @@ function TimeCardReport({ allstudents, idToEmail, postToUser }) {
           idToEmail[student_id][0],
           idToEmail[student_id][1],
           1,
+          idToEmail[student_id][2],
         ];
       } else {
         students_data[student_id][2] += 1;
@@ -102,6 +104,7 @@ function TimeCardReport({ allstudents, idToEmail, postToUser }) {
       const totalAmount = rateApproved * total_hours;
 
       timeCardReport.push([
+        students_data[student_id][3],
         students_data[student_id][1],
         students_data[student_id][0],
         posts_data[post_id],
@@ -292,7 +295,7 @@ export async function getServerSideProps(context) {
   const post2User = {};
   allstudents.forEach((student) => {
     if (student) {
-      idToEmail[student._id] = [student.name, student.email];
+      idToEmail[student._id] = [student.name, student.email, student.rollno];
       const setSelectedPosts = new Set(student.selectedPosts);
       for (let i of setSelectedPosts) {
         if (post2User[i]) {

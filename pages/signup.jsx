@@ -28,6 +28,7 @@ const SignupPage = () => {
     const body = {
       email: e.currentTarget.email.value,
       name: e.currentTarget.name.value,
+      rollno: e.currentTarget.rollno.value,
       password: e.currentTarget.password.value,
       role: e.currentTarget.role.value,
       posts: [],
@@ -84,6 +85,21 @@ const SignupPage = () => {
             <Row form>
               <Col sm="12" md={{ size: 6, offset: 3 }}>
                 <FormGroup>
+                  <Label for="rollno">
+                    <h5>Roll Number</h5>
+                  </Label>
+                  <Input
+                    type="text"
+                    name="rollno"
+                    id="rollno"
+                    placeholder="Enter your roll number"
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
+            <Row form>
+              <Col sm="12" md={{ size: 6, offset: 3 }}>
+                <FormGroup>
                   <Label for="email">
                     <h5>Email Address</h5>
                   </Label>
@@ -96,6 +112,7 @@ const SignupPage = () => {
                 </FormGroup>
               </Col>
             </Row>
+
             <Row form>
               <Col sm="12" md={{ size: 6, offset: 3 }}>
                 <FormGroup>
