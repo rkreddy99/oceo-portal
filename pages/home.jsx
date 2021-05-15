@@ -69,7 +69,7 @@ const Home = () => {
             </Link>
             </Col>
             <Col sm="1" md="4" style={{margin: "0.5em 0em 0.5em 0em"}}>
-            <Link href="/admin/reports/timecardreport">
+            <Link href="/admin/reports/timeCardReport">
             <Card body className="text-center" style={{height:"100%", cursor: "pointer"}}>
                 <div style={{marginBottom: "0.5em"}}><FontAwesomeIcon icon="file-excel" size="3x"/></div>
                 <CardTitle style={{marginBottom: "0.25em"}} tag="h5">Reports</CardTitle>
@@ -78,7 +78,7 @@ const Home = () => {
             </Link>
             </Col>
             <Col sm="1" md="4" style={{margin: "0.5em 0em 0.5em 0em"}}>
-            <Link href="/admin/">
+            <Link href="/admin/manageUsers">
             <Card body className="text-center" style={{height:"100%", cursor: "pointer"}}>
                 <div style={{marginBottom: "0.5em"}}><FontAwesomeIcon icon="users-cog" size="3x"/></div>
                 <CardTitle style={{marginBottom: "0.25em"}} tag="h5">Manage Users</CardTitle>
