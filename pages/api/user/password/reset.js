@@ -27,7 +27,7 @@ handler.post(async (req, res) => {
   });
 
   const msg = {
-    to: process.env.EMAIL_FROM,
+    to: req.body.email,
     from: process.env.EMAIL_FROM,
     subject: "Reset your password for o-CEO Portal.",
     html: `
