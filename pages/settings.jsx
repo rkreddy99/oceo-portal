@@ -87,7 +87,7 @@ const ProfileSection = () => {
         <title>Settings</title>
       </Head>
       <section>
-        <h2>Edit Profile</h2>
+        {/* <h2>Edit Profile</h2> */}
         {msg.message ? (
           <p
             style={{

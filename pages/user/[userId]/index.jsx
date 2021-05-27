@@ -59,11 +59,7 @@ export default function UserPage({ user, posts }) {
         {/* <img src={profilePicture || defaultProfilePicture(_id)} width="256" height="256" alt={name} /> */}
         {/* <section> */}
         <h2>{name}</h2>
-        {isCurrentUser && (
-          <Link href="/settings">
-            <a>Edit Profile</a>
-          </Link>
-        )}
+
         <br />
         {/* Bio
           <p>{bio}</p> */}

@@ -402,14 +402,10 @@ export default function TimeCardPage({ user, timecards }) {
           <title>Timecard for {name}</title>
         </Head>
         <h2>{name}</h2>
-        {isCurrentUser && (
-          <Link href="/settings">
-            <a>Edit Profile</a>
-          </Link>
-        )}
+
         <>
           <br></br>
-          <Button>Generate Report</Button>
+          {/* <Button>Generate Report</Button> */}
           <h3> Timecards Submitted </h3>
           <Container>
             <div id="alert-space"></div>
@@ -429,11 +425,7 @@ export default function TimeCardPage({ user, timecards }) {
           <title>Timecard for {name}</title>
         </Head>
         <h2>{name}</h2>
-        {isCurrentUser && (
-          <Link href="/settings">
-            <a>Edit Profile</a>
-          </Link>
-        )}
+
         {user?.role == "student" ? (
           <>
             <h3>Timecard for Post</h3>
