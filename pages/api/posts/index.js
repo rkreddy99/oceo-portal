@@ -4,6 +4,7 @@ import {
   getPosts,
   insertPost,
   approvePost,
+  submitFeedback,
   deletePost,
   editPost,
 } from "@/db/index";
@@ -70,6 +71,12 @@ handler.patch(async (req, res) => {
     req.status(401).end();
   }
   let body = JSON.parse(req.body);
+  if(body.feedback){
+
+    const r = await submitFeedback(req.db, body);
+    console.log("feedback started");
+    return res.json({ r });
+  }
   if (body.approve === true) {
     const r = await approvePost(req.db, body);
     return res.json({ r });

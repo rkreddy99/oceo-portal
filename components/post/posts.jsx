@@ -268,7 +268,7 @@ function Post({ post, va }) {
               <Modal isOpen={showCommentHistoryModal}>
                 <ModalHeader>{post.title}</ModalHeader>
                 <ModalBody>
-                  {post.comments.map((comment) => (
+                  {post?.comments?.map((comment) => (
                     <p>{comment}</p>
                   ))}
                 </ModalBody>

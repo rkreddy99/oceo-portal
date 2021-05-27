@@ -77,6 +77,18 @@ export async function approvePost(db, { postId, approve }) {
     );
   return value;
 }
+export async function submitFeedback(db, { feedback,postId, userId, q1, q2, q3 }) {
+  
+  const {value} = await db
+  .collection("posts")
+  .findOneAndUpdate(
+    { _id: postid },
+    { $push: { feedback: {"userId": userId, "q1":q1, "q2":q2, q3: "q3" } } },
+    { returnOriginal: false }
+  );
+  return value;
+}
+
 
 export async function deletePost(db, { postId, approve }) {
   if (!approve) {
