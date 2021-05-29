@@ -31,9 +31,10 @@ Three type of users interact with the website, students, professor/mentor, admin
 
 ## Project Structure
 
-Pages Folder: This folder contains the response JSX code for each url. For example pages/admin/index.js will contain code that is displayed when URL localhost:3000/admin/ is requested.
+Pages Folder: This folder contains the response JSX code for each url. For example pages/admin/index.js will contain code that is displayed when URL localhost:3000/admin/ is requested. <br> 
+Pages folder contains api directory, this api directory is contains functions which are used in any backend request. For every form submission a request to these API functions is made. <br>
 Db Folder: This folder exports the functions to make any change in database.
-Pages folder contains api directory, this api directory is contains functions which are used in any backend request. For every form submission a request to these API functions is made.
+
 
 ## Further Improvements required:
 1) Deployment of project on a public IP.
