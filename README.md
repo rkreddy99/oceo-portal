@@ -1,4 +1,6 @@
 # o-CEO Portal for IITGN
+This is main code for oCEO Portal website. We have used next.js front end combined with MongoDB backend and database.
+This portal facilate a simplified flow for posting, applying and managing on capus employment opportunites. 
 ## Instructions to Run
 1) Clone the repo.
 2) Run npm i to install all the dependencies.
@@ -6,7 +8,7 @@
 4) Use monodb compass to monitor the database. For estatblishing monogodb connection use URL mentioned in project.
 5) Run mongod to start the database.
 
-We have used next.js front end combined with MongoDB backend and database. 
+ 
 ## Features List
 Three type of users interact with the website, students, professor/mentor, admin.
 ### For student:
