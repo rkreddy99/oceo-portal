@@ -1,5 +1,5 @@
-o-CEO Portal for IITGN
-Instructions to Run
+# o-CEO Portal for IITGN
+# Instructions to Run
 1) Clone the repo.
 2) Run npm i to install all the dependencies.
 3) To run the server use command yarn dev.
@@ -7,7 +7,7 @@ Instructions to Run
 5) Run mongod to start the database.
 
 We have used next.js front end combined with MongoDB backend and database. 
-
+# Features List
 Three type of users interact with the website, students, professor/mentor, admin.
 If you login as a student:
 1) You can see all opportunities posted by mentors and approved by admin.
@@ -27,8 +27,11 @@ For admin:
 3) Admin can send reminder to all the studnets who have not filled their timecards yet.
 4) Admin can see all time cards filled for the current month in a report generated through the website.
 
-Project Structure
-Pages
+# Project Structure
+
+Pages Folder: This folder contains the response JSX code for each url. For example pages/admin/index.js will contain code that is displayed when URL localhost:3000/admin/ is requested.
+Db Folder: This folder exports the functions to make any change in database.
+Pages folder contains api directory, this api directory is contains functions which are used in any backend request. For every form submission a request to these API functions is made.
 
 Further Improvements required:
 1) Deployment of project on a public IP.
