@@ -1,1 +1,36 @@
 o-CEO Portal for IITGN
+Instructions to Run
+1) Clone the repo.
+2) Run npm i to install all the dependencies.
+3) To run the server use command yarn dev.
+4) Use monodb compass to monitor the database. For estatblishing monogodb connection use URL mentioned in project.
+5) Run mongod to start the database.
+
+We have used next.js front end combined with MongoDB backend and database. 
+
+Three type of users interact with the website, students, professor/mentor, admin.
+If you login as a student:
+1) You can see all opportunities posted by mentors and approved by admin.
+2) You can apply on any opportunity. Application can only be applied once. 
+3) You will receive email once you are selected to work on some opportunity.
+4) Once selected for an opportunity you can fill time card for them through portal.
+
+For professor/mentor:
+1) Can post a new opportunity through portal.
+2) Application will then go to the adin next. Admin can either approve or suggest some comments for improvement on the post.
+3) Once approved by admin opportunity will become open for students to apply.
+4) Professor can monitor time cards for opportunities under him.
+
+For admin:
+1) Admin controls which opportunity posts will be displayed to students.
+2) Admin has final decision for students who are suggested by the professor to work on any project.
+3) Admin can send reminder to all the studnets who have not filled their timecards yet.
+4) Admin can see all time cards filled for the current month in a report generated through the website.
+
+Project Structure
+Pages
+
+Further Improvements required:
+1) Deployment of project on a public IP.
+2) Provideing a storage server for collecting resumes of students.
+3) Adding features like midterm and endterm feedback, awards and achievements section.
