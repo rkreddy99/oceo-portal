@@ -4,9 +4,10 @@ This portal facilate a simplified flow for posting, applying and managing on cap
 ## Instructions to Run
 1) Clone the repo.
 2) Run npm i to install all the dependencies.
-3) To run the server use command yarn dev. A server will launch on localhost:3000/
-4) Run command mongod to start the database. 
-5) Use monodb compass to monitor the database. For estatblishing monogodb connection use URL mentioned in project .env file(currently mongodb://localhost:27017/authen?retryWrites=true&w=majorit).
+3) Install mongodb and create a database as authen.
+4) To run the server use command yarn dev. A server will launch on localhost:3000/
+5) Run command mongod to start the database. 
+6) Use mongodb compass to monitor the database. For estatblishing monogodb connection use URL mentioned in project .env file(currently mongodb://localhost:27017/authen?retryWrites=true&w=majorit).
 
  
 ## Features List
@@ -38,11 +39,11 @@ Db Folder: This folder exports the functions to make any change in database.
 
 ## Further Improvements required:
 1) Deployment of project on a public IP.
-2) Provideing a storage server for collecting resumes of students.
+2) Providing a storage server for collecting resumes of students.
 3) Adding features like midterm and endterm feedback, awards and achievements section.
 
 ## Contact Developers
-Send email to us vedanta.bhutani@iitgn.ac.in, rama.reddy@iitgn.ac.in, vraj.patel@iitgn.ac.in.
+Send email to us vedanta.bhutani@iitgn.ac.in, krishna.reddy@iitgn.ac.in, vraj.patel@iitgn.ac.in.
 
 ## Acknowledgement 
 We thank Prof. Gopinadhan and Mr. Sujit Shah for continous guidance thoughtout the project.
