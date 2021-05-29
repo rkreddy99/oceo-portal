@@ -5,7 +5,7 @@ This portal facilate a simplified flow for posting, applying and managing on cap
 1) Clone the repo.
 2) Run npm i to install all the dependencies.
 3) To run the server use command yarn dev. A server will launch on localhost:3000/
-4) Run mongod to start the database.
+4) Run command mongod to start the database. 
 5) Use monodb compass to monitor the database. For estatblishing monogodb connection use URL mentioned in project .env file(currently mongodb://localhost:27017/authen?retryWrites=true&w=majorit).
 
  
