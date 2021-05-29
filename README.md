@@ -43,3 +43,6 @@ Db Folder: This folder exports the functions to make any change in database.
 
 ## Contact Developers
 Send email to us vedanta.bhutani@iitgn.ac.in, rama.reddy@iitgn.ac.in, vraj.patel@iitgn.ac.in.
+
+## Acknowledgement 
+We thank Prof. Gopinadhan and Mr. Sujit Shah for continous guidance thoughtout the project.
