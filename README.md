@@ -41,7 +41,7 @@ Db Folder: This folder exports the functions to make any change in database.
 1) Deployment of project on a public IP.
 2) Providing a storage server for collecting resumes of students.
 3) Adding features like midterm and endterm feedback, awards and achievements section.
-
+4) Linking with IMS database for CPI and course details. Figuring out a flow for managing recurring opportunities like courses offered every year.
 ## Contact Developers
 Send email to us vedanta.bhutani@iitgn.ac.in, krishna.reddy@iitgn.ac.in, vraj.patel@iitgn.ac.in.
 
